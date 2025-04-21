@@ -344,8 +344,10 @@ export default function Home() {
   return (
     <main className="relative overflow-hidden">
       <Preloader />
-      <Header />
-      <Hero />
+      <div className="relative z-10">
+        <Header />
+        <Hero />
+      </div>
       <AnimatedStats categories={statsCategories} />
       <Services />
       <ProcessFlow

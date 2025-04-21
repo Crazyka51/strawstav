@@ -62,11 +62,12 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
         {
           scaleY: 1,
           ease: "none",
+          duration: 1.5,
           scrollTrigger: {
             trigger: timelineRef.current,
             start: "top 80%",
             end: "bottom 20%",
-            scrub: true,
+            scrub: 0.5,
           },
         },
       )

@@ -87,7 +87,7 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
       )
     }
 
-    // Animace jednotlivých kroků
+    // Animace jednotlivých kroků - upravíme pro postupné zobrazování
     stepsRef.current.forEach((step, index) => {
       if (step) {
         // Animace ikony
@@ -100,7 +100,7 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
               scale: 1,
               opacity: 1,
               duration: 0.6,
-              delay: 0.3 + index * 0.2,
+              delay: 0.3 + index * 0.3, // Zvýšíme zpoždění mezi kroky
               ease: "back.out(1.7)",
               scrollTrigger: {
                 trigger: step,
@@ -121,7 +121,7 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
               y: 0,
               opacity: 1,
               duration: 0.6,
-              delay: 0.5 + index * 0.2,
+              delay: 0.5 + index * 0.3, // Zvýšíme zpoždění mezi kroky
               scrollTrigger: {
                 trigger: step,
                 start: "top 80%",
@@ -141,7 +141,7 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
               scale: 1,
               opacity: 1,
               duration: 0.4,
-              delay: 0.7 + index * 0.2,
+              delay: 0.7 + index * 0.3, // Zvýšíme zpoždění mezi kroky
               ease: "back.out(1.7)",
               scrollTrigger: {
                 trigger: step,

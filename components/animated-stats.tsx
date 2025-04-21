@@ -66,27 +66,28 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
             },
           )
 
-          // Animace čísla
+          // Animace čísla - opravíme, aby se čísla skutečně animovala
           const valueElement = stat.querySelector(".stat-value")
           if (valueElement) {
             const targetValue = Number.parseInt(valueElement.getAttribute("data-value") || "0")
+            const prefix = valueElement.getAttribute("data-prefix") || ""
+            const suffix = valueElement.getAttribute("data-suffix") || ""
 
-            gsap.fromTo(
-              valueElement,
-              { innerText: "0" },
-              {
-                innerText: targetValue,
-                duration: 2,
-                delay: index * 0.1 + 0.3,
-                ease: "power2.out",
-                snap: { innerText: 1 },
-                onUpdate: function () {
-                  const category = categories[categoryIndex]
-                  const stat = category.stats[index]
-                  valueElement.textContent = `${stat.prefix || ""}${Math.floor(Number(this.targets()[0].innerText))}${stat.suffix || ""}`
-                },
+            // Nastavíme počáteční hodnotu na 0
+            valueElement.textContent = `${prefix}0${suffix}`
+
+            // Animujeme hodnotu od 0 do cílové hodnoty
+            gsap.to(valueElement, {
+              innerText: targetValue,
+              duration: 2,
+              delay: index * 0.1 + 0.3,
+              ease: "power2.out",
+              snap: { innerText: 1 },
+              onUpdate: function () {
+                const currentValue = Math.floor(Number(this.targets()[0].innerText))
+                valueElement.textContent = `${prefix}${currentValue}${suffix}`
               },
-            )
+            })
           }
         }
       })
@@ -157,10 +158,13 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
                       <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-strawstav-red to-red-800"></div>
                       <CardContent className="p-6 flex flex-col items-center justify-center text-center">
                         <div className="text-strawstav-red mb-4 text-4xl">{stat.icon}</div>
-                        <div className="stat-value text-4xl font-bold mb-2" data-value={stat.value}>
-                          {stat.prefix || ""}
-                          {hasAnimated[category.id] ? stat.value : 0}
-                          {stat.suffix || ""}
+                        <div
+                          className="stat-value text-4xl font-bold mb-2"
+                          data-value={stat.value}
+                          data-prefix={stat.prefix || ""}
+                          data-suffix={stat.suffix || ""}
+                        >
+                          {stat.prefix || ""}0{stat.suffix || ""}
                         </div>
                         <div className="text-gray-700 font-medium mb-2">{stat.label}</div>
                         {stat.description && <div className="text-gray-500 text-sm">{stat.description}</div>}

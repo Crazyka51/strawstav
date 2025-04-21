@@ -54,6 +54,12 @@ export default function Preloader() {
             onComplete: () => {
               if (preloaderRef.current) {
                 preloaderRef.current.style.display = "none"
+
+                // Vyšleme vlastní událost, že preloader byl dokončen
+                // DŮLEŽITÉ: Vyšleme událost až po úplném skrytí preloaderu
+                setTimeout(() => {
+                  document.dispatchEvent(new CustomEvent("preloaderComplete"))
+                }, 100)
               }
             },
           })
@@ -61,16 +67,7 @@ export default function Preloader() {
       })
 
       // Set initial states
-      gsap.set(strechaRef.current, {
-        opacity: 0,
-      })
-      gsap.set(podkroviRef.current, {
-        opacity: 0,
-      })
-      gsap.set(obrysdomuRef.current, {
-        opacity: 0,
-      })
-      gsap.set(textRef.current, {
+      gsap.set([strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current], {
         opacity: 0,
       })
       gsap.set(caraRef.current, {
