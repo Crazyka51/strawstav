@@ -29,7 +29,7 @@ interface AnimatedStatsProps {
 }
 
 export default function AnimatedStats({ categories }: AnimatedStatsProps) {
-  const sectionRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
   const statRefs = useRef<(HTMLDivElement | null)[][]>([])
   const [hasAnimated, setHasAnimated] = useState<Record<string, boolean>>({})
   const [activeCategory, setActiveCategory] = useState(categories[0].id)
@@ -37,7 +37,7 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
-    // Inicializace pole referencí pro každou kategorii
+    // Initialize refs array for each category
     categories.forEach((category, i) => {
       statRefs.current[i] = []
     })
@@ -53,7 +53,7 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
 
       stats.forEach((stat, index) => {
         if (stat) {
-          // Animace karty
+          // Animate card
           gsap.fromTo(
             stat,
             { y: 50, opacity: 0 },
@@ -63,31 +63,30 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
               duration: 0.8,
               delay: index * 0.1,
               ease: "power2.out",
-            },
+            }
           )
 
-          // Animace čísla - opravíme, aby se čísla skutečně animovala
+          // Animate number
           const valueElement = stat.querySelector(".stat-value")
           if (valueElement) {
-            const targetValue = Number.parseInt(valueElement.getAttribute("data-value") || "0")
+            const targetValue = parseInt(valueElement.getAttribute("data-value") || "0")
             const prefix = valueElement.getAttribute("data-prefix") || ""
             const suffix = valueElement.getAttribute("data-suffix") || ""
 
-            // Nastavíme počáteční hodnotu na 0
-            valueElement.textContent = `${prefix}0${suffix}`
-
-            // Animujeme hodnotu od 0 do cílové hodnoty
-            gsap.to(valueElement, {
-              innerText: targetValue,
-              duration: 2,
-              delay: index * 0.1 + 0.3,
-              ease: "power2.out",
-              snap: { innerText: 1 },
-              onUpdate: function () {
-                const currentValue = Math.floor(Number(this.targets()[0].innerText))
-                valueElement.textContent = `${prefix}${currentValue}${suffix}`
-              },
-            })
+            gsap.fromTo(
+              valueElement,
+              { innerText: 0 },
+              {
+                innerText: targetValue,
+                duration: 2,
+                ease: "power2.out",
+                snap: { innerText: 1 },
+                onUpdate: function() {
+                  const currentValue = Math.round(parseFloat(this.targets()[0].innerText))
+                  valueElement.textContent = `${prefix}${currentValue}${suffix}`
+                }
+              }
+            )
           }
         }
       })
@@ -95,26 +94,26 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
       setHasAnimated((prev) => ({ ...prev, [categoryId]: true }))
     }
 
-    // Nastavení ScrollTriggeru pro každou kategorii
+    // Set up ScrollTrigger for each category
     categories.forEach((category) => {
-      const trigger = ScrollTrigger.create({
+      ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top 70%",
         onEnter: () => {
           if (category.id === activeCategory) {
             animateStats(category.id)
           }
-        },
+        }
       })
-
-      return () => {
-        trigger.kill()
-      }
     })
 
-    // Animace při změně kategorie
+    // Animate active category
     if (activeCategory) {
       animateStats(activeCategory)
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
     }
   }, [categories, activeCategory, hasAnimated])
 
