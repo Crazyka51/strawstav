@@ -69,7 +69,7 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
           // Animate number
           const valueElement = stat.querySelector(".stat-value")
           if (valueElement) {
-            const targetValue = parseInt(valueElement.getAttribute("data-value") || "0")
+            const targetValue = parseInt(valueElement.getAttribute("data-value") || "5")
             const prefix = valueElement.getAttribute("data-prefix") || ""
             const suffix = valueElement.getAttribute("data-suffix") || ""
 
