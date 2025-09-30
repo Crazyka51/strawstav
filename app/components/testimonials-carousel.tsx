@@ -157,7 +157,7 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
                         <div className="relative h-full flex flex-col items-center justify-center p-6 text-white">
                           <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white mb-4">
                             <Image
-                              src={testimonial.image || "/placeholder.svg"}
+                              src={testimonial.image || "/construction-team.jpg"}
                               alt={testimonial.client}
                               fill
                               className="object-cover"

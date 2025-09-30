@@ -8,39 +8,39 @@ import Image from "next/image"
 const projects = [
   {
     id: 1,
-    title: "Rodinný dům Brno",
-    description: "Kompletní výstavba rodinného domu na klíč",
-    image: "/placeholder.svg?height=600&width=800",
+    title: "Rekonstrukce fasády - Rezidenční dům",
+    description: "Kompletní obnova fasády bytového domu včetně zateplení",
+    image: "/fasada_po.jpg",
   },
   {
     id: 2,
-    title: "Rekonstrukce bytu Praha",
-    description: "Celková rekonstrukce bytové jednotky",
-    image: "/placeholder.svg?height=600&width=800",
+    title: "Odvětrání suterénů - Bytový komplex",
+    description: "Instalace odvětrávacího systému proti vlhkosti",
+    image: "/odvetravani_1.jpg",
   },
   {
     id: 3,
-    title: "Komerční prostory Ostrava",
-    description: "Přestavba komerčních prostor",
-    image: "/placeholder.svg?height=600&width=800",
+    title: "Zemní práce - Výstavba",
+    description: "Příprava staveniště a zemní práce pro novou výstavbu",
+    image: "/bagr.jpg",
   },
   {
     id: 4,
-    title: "Bytový dům Plzeň",
-    description: "Revitalizace bytového domu",
-    image: "/placeholder.svg?height=600&width=800",
+    title: "Rekonstrukce podkroví",
+    description: "Kompletní přestavba podkroví na obytný prostor",
+    image: "/podkrovi.png",
   },
   {
     id: 5,
-    title: "Zahradní úpravy Olomouc",
-    description: "Kompletní úprava zahrady a okolí domu",
-    image: "/placeholder.svg?height=600&width=800",
+    title: "Střešní práce",
+    description: "Výměna střešní krytiny a oprava konstrukce",
+    image: "/strecha.png",
   },
   {
     id: 6,
-    title: "Průmyslová hala Liberec",
-    description: "Výstavba průmyslové haly",
-    image: "/placeholder.svg?height=600&width=800",
+    title: "Stavební práce na výšce",
+    description: "Specializované práce pomocí plošin a lezeckých technik",
+    image: "/plosina.jpg",
   },
 ]
 
@@ -104,7 +104,7 @@ export default function Gallery() {
           {projects.map((project) => (
             <div key={project.id} className="gallery-item">
               <Image
-                src={project.image || "/placeholder.svg"}
+                src={project.image || "/construction-team.jpg"}
                 alt={project.title}
                 width={800}
                 height={600}
