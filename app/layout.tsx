@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Poppins } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/app/components/theme-provider"
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -13,7 +13,6 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "STRAWSTAV S.R.O. | Veškerá stavební činnost",
   description: "Stavební činnost, úklid bytových domů, správa nemovitostí, údržba zeleně, zemní práce",
-    generator: 'v0.dev'
 }
 
 export default function RootLayout({

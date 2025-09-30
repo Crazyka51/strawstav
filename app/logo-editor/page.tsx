@@ -1,4 +1,4 @@
-import AdvancedLogoEditor from "@/components/advanced-logo-editor"
+import AdvancedLogoEditor from "@/app/components/advanced-logo-editor"
 
 export default function LogoEditorPage() {
   return (

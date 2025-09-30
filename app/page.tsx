@@ -1,278 +1,271 @@
-import Preloader from "@/components/preloader"
-import Header from "@/components/header"
-import Hero from "@/components/hero"
-import Services from "@/components/services"
-import Gallery from "@/components/gallery"
-import Contact from "@/components/contact"
-import Footer from "@/components/footer"
-import AnimatedLogo from "@/components/animated-logo"
-import TimelineProjects from "@/components/timeline-projects"
-import AnimatedStats from "@/components/animated-stats"
-import BeforeAfterGallery from "@/components/before-after-gallery"
-import BlogSection from "@/components/blog-section"
-import TestimonialsCarousel from "@/components/testimonials-carousel"
-import ProcessFlow from "@/components/process-flow"
-import FaqAccordion from "@/components/faq-accordion"
-import BuildingCalculator from "@/components/building-calculator"
+import { Suspense } from "react"
+import Preloader from "@/app/components/preloader"
+import Header from "@/app/components/header"
+import Footer from "@/app/components/footer"
+import PageRenderer from "@/app/components/page-renderer"
+import { Skeleton } from "@/app/components/ui/skeleton"
+import Hero from "@/app/components/hero"
+import Services from "@/app/components/services"
+import Gallery from "@/app/components/gallery"
+import Contact from "@/app/components/contact"
+import TimelineProjects from "@/app/components/timeline-projects"
+import AnimatedStats from "@/app/components/animated-stats"
+import BeforeAfterGallery from "@/app/components/before-after-gallery"
+import BlogSection from "@/app/components/blog-section"
+import TestimonialsCarousel from "@/app/components/testimonials-carousel"
+import ProcessFlow from "@/app/components/process-flow"
+import FaqAccordion from "@/app/components/faq-accordion"
 import { Building, Calendar, Users, Heart, Award, Hammer, FileText, PencilRuler, CheckCircle } from "lucide-react"
 
-// Ukázková data projektů pro časovou osu
+// Data realizovaných projektů STRAWSTAV
 const projectsData = [
   {
     id: 1,
-    year: 2018,
-    title: "Bytový dům Praha",
-    description: "Kompletní výstavba bytového domu s 24 jednotkami včetně podzemních garáží a zelené střechy.",
-    image: "/placeholder.svg?height=600&width=800",
-    category: "Bytová výstavba",
+    year: 2021,
+    title: "Rekonstrukce rodinného domu",
+    description: "Kompletní rekonstrukce rodinného domu včetně zateplení fasády, výměny oken a modernizace interiérů.",
+    image: "/IMG_20210710_002649.jpg",
+    category: "Rodinné domy - rekonstrukce",
     details: {
-      client: "Městská část Praha 6",
-      location: "Praha 6, Dejvice",
-      team: "15 členů týmu",
-      duration: "18 měsíců",
-      awards: ["Stavba roku 2019 - finalista", "Cena za energetickou efektivitu"],
+      client: "Soukromý investor",
+      location: "Střední Čechy",
+      team: "4 členové týmu",
+      duration: "8 měsíců",
+      awards: [],
       gallery: [
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
+        "/IMG_20210710_002649.jpg",
+        "/fasada_po.jpg",
+        "/fasada_po1.jpg",
+        "/fasada_po2.jpg",
+        "/fasada_po3.jpg",
       ],
     },
   },
   {
     id: 2,
-    year: 2019,
-    title: "Rekonstrukce historické budovy",
+    year: 2023,
+    title: "Fasádní práce bytového domu",
     description:
-      "Citlivá rekonstrukce památkově chráněného objektu v centru Brna s důrazem na zachování původních prvků.",
-    image: "/placeholder.svg?height=600&width=800",
-    category: "Rekonstrukce",
+      "Kompletní sanace a rekonstrukce fasády bytového domu včetně odvlhčení zdiva a instalace ventilačního systému.",
+    image: "/fasada_po.jpg",
+    category: "Fasády a zateplení",
     details: {
-      client: "Národní památkový ústav",
-      location: "Brno, historické centrum",
-      team: "12 členů týmu",
-      duration: "24 měsíců",
-      awards: ["Cena za zachování historického dědictví"],
+      client: "SVJ Bytový dům",
+      location: "Praha a okolí",
+      team: "6 členů týmu",
+      duration: "4 měsíce",
+      awards: [],
       gallery: [
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
+        "/fasada_pred.jpg",
+        "/fasada_po.jpg",
+        "/fasada_po4.jpg",
+        "/fasada_po5.jpg",
       ],
     },
   },
   {
     id: 3,
-    year: 2020,
-    title: "Průmyslový areál Ostrava",
-    description: "Výstavba moderního průmyslového areálu s administrativní budovou a výrobními halami.",
-    image: "/placeholder.svg?height=600&width=800",
-    category: "Průmyslové stavby",
+    year: 2022,
+    title: "Odvětrání suterénu",
+    description: "Instalace odvětrávacího systému pro eliminaci vlhkosti v suterénních prostorách.",
+    image: "/odvetravani_1.jpg",
+    category: "Odvětrání a izolace",
     details: {
-      client: "TechnoSteel s.r.o.",
-      location: "Ostrava, průmyslová zóna",
-      team: "25 členů týmu",
-      duration: "14 měsíců",
+      client: "Správa nemovitostí",
+      location: "Praha a okolí",
+      team: "3 členové týmu",
+      duration: "2 měsíce",
       gallery: [
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
+        "/odvetravani_1.jpg",
+        "/odvetravani_2.jpg",
+        "/odvetravani_3.jpg",
+        "/odvetravani_4.jpg",
+        "/odvetravani_5.jpg",
       ],
     },
   },
   {
     id: 4,
-    year: 2022,
-    title: "Rezidenční komplex Plzeň",
-    description: "Realizace luxusního rezidenčního komplexu s 50 bytovými jednotkami a relaxační zónou.",
-    image: "/placeholder.svg?height=600&width=800",
-    category: "Bytová výstavba",
+    year: 2020,
+    title: "Zemní práce a terénní úpravy",
+    description: "Výkopové práce, příprava staveniště a terénní úpravy pro nové stavební projekty.",
+    image: "/bagr.jpg",
+    category: "Zemní práce",
     details: {
-      client: "Plzeňské bydlení a.s.",
-      location: "Plzeň, Slovany",
-      team: "20 členů týmu",
-      duration: "22 měsíců",
-      awards: ["Nejlepší rezidenční projekt 2022 - Plzeňský kraj"],
+      client: "Různí klienti",
+      location: "Střední Čechy",
+      team: "5 členů týmu",
+      duration: "Průběžně dle projektů",
+      awards: [],
       gallery: [
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
-        "/placeholder.svg?height=600&width=800",
+        "/bagr.jpg",
+        "/plosina.jpg",
       ],
     },
   },
 ]
 
-// Ukázková data pro statistiky
+// Statistiky firmy STRAWSTAV
 const statsCategories = [
   {
     id: "general",
-    name: "Obecné statistiky",
+    name: "Naše úspěchy v číslech",
     stats: [
-      { value: 120, label: "Dokončených projektů", icon: <Building size={40} />, suffix: "+" },
-      { value: 15, label: "Let zkušeností", icon: <Calendar size={40} /> },
-      { value: 45, label: "Zaměstnanců", icon: <Users size={40} /> },
-      { value: 98, label: "Spokojených klientů", icon: <Heart size={40} />, suffix: "%" },
+      { value: 85, label: "Dokončených projektů", icon: <Building size={40} />, suffix: "+" },
+      { value: 12, label: "Let zkušeností", icon: <Calendar size={40} /> },
+      { value: 15, label: "Kvalifikovaných pracovníků", icon: <Users size={40} /> },
+      { value: 95, label: "Spokojených klientů", icon: <Heart size={40} />, suffix: "%" },
     ],
   },
   {
     id: "projects",
-    name: "Typy projektů",
+    name: "Specializace",
     stats: [
-      { value: 65, label: "Rodinných domů", icon: <Building size={40} /> },
-      { value: 28, label: "Bytových domů", icon: <Building size={40} /> },
-      { value: 15, label: "Komerčních objektů", icon: <Building size={40} /> },
-      { value: 12, label: "Průmyslových staveb", icon: <Building size={40} /> },
+      { value: 35, label: "Rekonstrukcí domů", icon: <Building size={40} /> },
+      { value: 25, label: "Fasádních prací", icon: <Building size={40} /> },
+      { value: 15, label: "Zemních prací", icon: <Hammer size={40} /> },
+      { value: 10, label: "Správa nemovitostí", icon: <Building size={40} /> },
     ],
   },
   {
-    id: "awards",
-    name: "Ocenění a certifikace",
+    id: "services",
+    name: "Služby",
     stats: [
-      { value: 8, label: "Stavba roku", icon: <Award size={40} /> },
-      { value: 12, label: "Odborných certifikací", icon: <Award size={40} /> },
-      { value: 5, label: "Mezinárodních ocenění", icon: <Award size={40} /> },
-      { value: 15, label: "Regionálních ocenění", icon: <Award size={40} /> },
+      { value: 5, label: "Hlavních služeb", icon: <Award size={40} /> },
+      { value: 24, label: "Hodin denně k dispozici", icon: <Calendar size={40} />, suffix: "/7" },
+      { value: 100, label: "Bezpečnost práce", icon: <Award size={40} />, suffix: "%" },
+      { value: 2, label: "Roky záruky", icon: <Award size={40} /> },
     ],
   },
 ]
 
-// Ukázková data pro galerii před a po
+// Před a po - realizované projekty
 const beforeAfterProjects = [
   {
     id: 1,
-    title: "Rekonstrukce koupelny",
-    description: "Kompletní rekonstrukce koupelny včetně výměny všech zařizovacích předmětů a obkladů.",
-    before: "/placeholder.svg?height=600&width=800",
-    after: "/placeholder.svg?height=600&width=800",
-    category: "Interiér",
-    location: "Praha",
-    date: "2022-05",
-    client: "Rodina Novákových",
+    title: "Rekonstrukce fasády bytového domu",
+    description:
+      "Kompletní sanace a renovace poškozené fasády bytového domu včetně odvlhčení a instalace ventilačních otvorů.",
+    before: "/fasada_pred.jpg",
+    after: "/fasada_po.jpg",
+    category: "Fasády",
+    location: "Praha a okolí",
+    date: "2023-04",
+    client: "SVJ Bytový dům",
     additionalImages: [
-      { before: "/placeholder.svg?height=600&width=800", after: "/placeholder.svg?height=600&width=800" },
-      { before: "/placeholder.svg?height=600&width=800", after: "/placeholder.svg?height=600&width=800" },
+      { before: "/fasada_pred1.jpg", after: "/fasada_po1.jpg" },
+      { before: "/fasada_pred2.jpg", after: "/fasada_po2.jpg" },
+      { before: "/fasada_pred3.jpg", after: "/fasada_po3.jpg" },
     ],
   },
   {
     id: 2,
-    title: "Fasáda bytového domu",
-    description: "Renovace fasády bytového domu včetně zateplení a výměny oken.",
-    before: "/placeholder.svg?height=600&width=800",
-    after: "/placeholder.svg?height=600&width=800",
-    category: "Exteriér",
-    location: "Brno",
-    date: "2021-09",
-    client: "SVJ Brno-střed",
+    title: "Dokončení fasády s odvětráním",
+    description: "Finální úpravy fasády s instalací odvětrávacího systému pro optimální vlhkost zdiva.",
+    before: "/fasada_po3.jpg",
+    after: "/fasada_po4.jpg",
+    category: "Fasády",
+    location: "Praha a okolí",
+    date: "2023-05",
+    client: "SVJ Bytový dům",
+    additionalImages: [{ before: "/fasada_po4.jpg", after: "/fasada_po5.jpg" }],
   },
   {
     id: 3,
-    title: "Rekonstrukce kuchyně",
-    description: "Modernizace kuchyně s novými spotřebiči a pracovní plochou.",
-    before: "/placeholder.svg?height=600&width=800",
-    after: "/placeholder.svg?height=600&width=800",
-    category: "Interiér",
-    location: "Ostrava",
-    date: "2022-02",
-    client: "Manželé Svobodovi",
-  },
-  {
-    id: 4,
-    title: "Revitalizace zahrady",
-    description: "Kompletní úprava zahrady včetně terénních úprav a výsadby nové zeleně.",
-    before: "/placeholder.svg?height=600&width=800",
-    after: "/placeholder.svg?height=600&width=800",
-    category: "Exteriér",
-    location: "Plzeň",
-    date: "2021-06",
-    client: "Rodina Dvořákových",
+    title: "Instalace odvětrání v suterénu",
+    description: "Profesionální řešení problému s vlhkostí v suterénních prostorách.",
+    before: "/odvetravani_1.jpg",
+    after: "/odvetravani_5.jpg",
+    category: "Odvětrání",
+    location: "Střední Čechy",
+    date: "2022-08",
+    client: "Správa nemovitostí",
   },
 ]
 
-// Ukázková data pro blog
+// Blog články
 const blogArticles = [
   {
     id: 1,
-    title: "Jak vybrat správný materiál pro stavbu rodinného domu",
+    title: "Fasádní práce: Kdy je čas na rekonstrukci?",
     excerpt:
-      "Výběr správného materiálu pro stavbu rodinného domu je klíčovým rozhodnutím, které ovlivní nejen cenu, ale i kvalitu a životnost stavby. V tomto článku vám poradíme, jak se v nabídce materiálů zorientovat.",
-    image: "/placeholder.svg?height=600&width=800",
-    date: "2023-05-15",
-    readTime: 5,
+      "Fasáda domu není jen estetická záležitost, ale také důležitá ochrana stavby. Jak poznat, kdy je čas na rekonstrukci fasády a jak postupovat? V článku najdete praktické rady od našich odborníků.",
+    image: "/fasada_po.jpg",
+    date: "2023-09-15",
+    readTime: 6,
     author: {
-      name: "Ing. Jan Novák",
-      avatar: "/placeholder.svg?height=100&width=100",
-      position: "Hlavní architekt",
+      name: "Pavel Sláma",
+      avatar: "/placeholder-user.jpg",
+      position: "Vedoucí stavebních prací",
     },
-    category: "Materiály",
-    slug: "jak-vybrat-spravny-material",
+    category: "Fasády",
+    slug: "fasady-kdy-rekonstrukce",
   },
   {
     id: 2,
-    title: "Pasivní domy: Budoucnost bydlení s minimální spotřebou energie",
+    title: "Problémy s vlhkostí? Řešením je odvětrání",
     excerpt:
-      "Pasivní domy představují moderní přístup k bydlení, který klade důraz na minimální spotřebu energie a maximální komfort. Zjistěte, jaké jsou výhody pasivního domu a zda je tato volba vhodná i pro vás.",
-    image: "/placeholder.svg?height=600&width=800",
-    date: "2023-04-22",
-    readTime: 7,
+      "Vlhkost v suterénu nebo přízemních prostorách může způsobit vážné škody. Jak účinně řešit problémy s vlhkostí pomocí moderních odvětrávacích systémů? Praktické rady a řešení od STRAWSTAV.",
+    image: "/odvetravani_1.jpg",
+    date: "2023-07-10",
+    readTime: 5,
     author: {
-      name: "Ing. Petra Svobodová",
-      avatar: "/placeholder.svg?height=100&width=100",
-      position: "Energetický specialista",
+      name: "Pavel Sláma",
+      avatar: "/placeholder-user.jpg",
+      position: "Technický specialista",
     },
-    category: "Energetika",
-    slug: "pasivni-domy-budoucnost-bydleni",
+    category: "Odvětrání",
+    slug: "problemy-s-vlhkosti-resenim-odvetravani",
   },
   {
     id: 3,
-    title: "Trendy v interiérovém designu pro rok 2023",
+    title: "Zemní práce: Základ každé úspěšné stavby",
     excerpt:
-      "Jaké jsou aktuální trendy v interiérovém designu? Přinášíme vám přehled nejnovějších trendů, které budou dominovat v roce 2023. Od barev přes materiály až po nábytek a doplňky.",
-    image: "/placeholder.svg?height=600&width=800",
-    date: "2023-03-10",
+      "Správně provedené zemní práce jsou základem každé kvalitní stavby. Co vše zahrnují zemní práce a proč je důležité svěřit je odborníkům? Seznamte se s našími službami v oblasti zemních prací.",
+    image: "/bagr.jpg",
+    date: "2023-05-20",
     readTime: 4,
     author: {
-      name: "Mgr. Lucie Černá",
-      avatar: "/placeholder.svg?height=100&width=100",
-      position: "Interiérová designérka",
+      name: "Pavel Sláma",
+      avatar: "/placeholder-user.jpg",
+      position: "Vedoucí zemních prací",
     },
-    category: "Design",
-    slug: "trendy-v-interierovem-designu-2023",
+    category: "Zemní práce",
+    slug: "zemni-prace-zaklad-uspesne-stavby",
   },
 ]
 
-// Ukázková data pro reference
+// Reference od našich klientů
 const testimonials = [
   {
     id: 1,
-    client: "Jan Novák",
-    company: "Novák Development",
-    position: "Jednatel",
-    text: "Spolupráce se STRAWSTAV byla bezproblémová od začátku až do konce. Oceňuji především profesionální přístup, dodržení termínů a vysokou kvalitu provedení. Určitě budeme spolupracovat i na dalších projektech.",
-    image: "/placeholder.svg?height=200&width=200",
+    client: "Marie Novotná",
+    company: "SVJ Rezidenční dům",
+    position: "Předsedkyně výboru",
+    text: "S firmou STRAWSTAV jsme spolupracovali na rekonstrukci fasády našeho bytového domu. Vše proběhlo přesně podle plánu, komunikace byla vždy jasná a výsledek překonal naše očekávání. Velmi doporučujeme!",
+    image: "/placeholder-user.jpg",
     rating: 5,
-    projectType: "Bytový dům",
+    projectType: "Rekonstrukce fasády",
   },
   {
     id: 2,
-    client: "Petra Svobodová",
-    company: "SVJ Brno-střed",
-    position: "Předsedkyně výboru",
-    text: "Naše SVJ si vybralo společnost STRAWSTAV pro rekonstrukci fasády a výměnu oken. Výsledek předčil naše očekávání. Práce byly provedeny ve vysoké kvalitě a v dohodnutém termínu. Komunikace byla vždy rychlá a vstřícná.",
-    image: "/placeholder.svg?height=200&width=200",
+    client: "Tomáš Prokůpek",
+    company: "Správa nemovitostí Praha",
+    position: "Technický manažer",
+    text: "STRAWSTAV pro nás řešil problémy s vlhkostí v suterénech několika objektů. Jejich řešení s odvětrávacími systémy bylo velmi účinné. Profesionální přístup a kvalitní práce.",
+    image: "/placeholder-user.jpg",
     rating: 5,
-    projectType: "Rekonstrukce bytového domu",
+    projectType: "Odvětrání suterénů",
   },
   {
     id: 3,
-    client: "Martin Dvořák",
-    company: "TechnoSteel s.r.o.",
-    position: "Technický ředitel",
-    text: "Pro naši společnost STRAWSTAV realizoval výstavbu nové výrobní haly. Oceňuji především flexibilitu při řešení změn v projektu a schopnost dodržet stanovený rozpočet. Spolupráce byla na vysoké profesionální úrovni.",
-    image: "/placeholder.svg?height=200&width=200",
+    client: "Jiří Starý",
+    company: "Soukromý investor",
+    position: "Vlastník nemovitosti",
+    text: "Rekonstrukce našeho rodinného domu proběhla bez problémů. Oceňujeme zejména dodržení termínů a rozpočtu. Tým STRAWSTAV byl vždy připraven řešit jakékoliv otázky nebo problémy.",
+    image: "/placeholder-user.jpg",
     rating: 4,
-    projectType: "Průmyslová hala",
+    projectType: "Rekonstrukce rodinného domu",
   },
 ]
 
@@ -300,43 +293,43 @@ const processSteps = [
   },
 ]
 
-// Ukázková data pro FAQ
+// Často kladené otázky
 const faqQuestions = [
   {
-    question: "Jak dlouho trvá výstavba rodinného domu?",
+    question: "Jaké služby nabízíte?",
     answer:
-      "Doba výstavby rodinného domu závisí na mnoha faktorech, jako je velikost, složitost projektu, použité materiály a technologie. Standardně se pohybuje v rozmezí 6-12 měsíců od zahájení stavby. V případě dřevostaveb může být doba kratší, přibližně 3-6 měsíců.",
-    category: "Výstavba",
+      "Nabízíme komplexní stavební služby zahrnující rekonstrukce rodinných domů, fasádní práce, odvlhčování a odvětrání, zemní práce, úklid bytových domů, správu nemovitostí a údržbu zeleně. Všechny práce provádíme s důrazem na kvalitu a dodržení termínů.",
+    category: "Služby",
   },
   {
-    question: "Jaké jsou výhody pasivního domu?",
+    question: "Jak řešíte problémy s vlhkostí?",
     answer:
-      "Pasivní dům nabízí několik významných výhod: výrazně nižší náklady na vytápění a chlazení (až o 90% oproti běžným stavbám), vyšší komfort bydlení díky stabilní teplotě a kvalitnímu vnitřnímu prostředí, ekologický provoz s minimálními emisemi CO2 a vyšší hodnotu nemovitosti na trhu. Počáteční investice je sice vyšší, ale vrátí se v průběhu užívání stavby.",
-    category: "Energetika",
+      "Problémy s vlhkostí řešíme komplexně pomocí moderních odvětrávacích systémů. Nejdříve provedeme odbornou diagnostiku příčiny vlhkosti, následně navrhneme optimální řešení. Instalujeme ventilační systémy, které zajišťují trvalé odstranění vlhkosti a předcházejí vzniku plesní.",
+    category: "Odvětrání",
   },
   {
-    question: "Poskytujete i služby v oblasti rekonstrukcí?",
+    question: "Jak dlouho trvá rekonstrukce fasády?",
     answer:
-      "Ano, kromě nových staveb se specializujeme i na rekonstrukce. Nabízíme kompletní rekonstrukce bytů, rodinných domů, bytových domů i komerčních objektů. Zajistíme vše od návrhu přes stavební povolení až po realizaci. Specializujeme se také na rekonstrukce historických budov s důrazem na zachování původních prvků.",
+      "Doba rekonstrukce fasády závisí na velikosti objektu a rozsahu prací. Běžná rekonstrukce fasády rodinného domu trvá 2-4 týdny, u bytových domů 1-3 měsíce. Při komplexních rekonstrukcích včetně zateplení a výměny oken může být doba delší.",
     category: "Rekonstrukce",
   },
   {
-    question: "Jak probíhá financování stavby?",
+    question: "Jak probíhá spolupráce a platby?",
     answer:
-      "Financování stavby obvykle probíhá formou postupných plateb podle předem dohodnutého harmonogramu. Standardně se platí záloha při podpisu smlouvy (obvykle 10-20% z celkové ceny) a dále jsou platby rozděleny podle dokončených etap stavby. Poslední platba (5-10%) je uhrazena po úspěšném předání stavby a odstranění případných vad a nedodělků.",
+      "Spolupráce začíná nezaváznou konzultací a oceněním. Po schválení nabídky uzavírame smlouvu a dohodneme se na harmonogramu prací. Platby probíhají postupně podle dokončených etap. Záloha při podpisu smlouvy činí obvykle 30% z celkové ceny.",
     category: "Finance",
   },
   {
-    question: "Jaká je záruka na provedenou stavbu?",
+    question: "Jaká je záruka na vaše práce?",
     answer:
-      "Na provedenou stavbu poskytujeme záruku v délce 60 měsíců (5 let) na stavební část a 24 měsíců (2 roky) na technologické části a zařízení. Záruka se vztahuje na vady způsobené chybou v projektu nebo v provedení stavby. Podmínkou záruky je provádění pravidelné údržby podle předaného manuálu užívání stavby.",
+      "Na všechny naše práce poskytujeme záruku 24 měsíců (2 roky). Záruka se vztahuje na vady způsobené chybou v provedení prác. U fasádních prací a odvětrávacích systémů poskytujeme rozšířenou záruku na funkčnost systému. Vždy jsme připraveni rychle řešit jakékoliv reklamace.",
     category: "Záruka",
   },
   {
-    question: "Zajišťujete i projekční činnost?",
+    question: "Poskytujete i poradenství a konzultace?",
     answer:
-      "Ano, nabízíme kompletní projekční služby od studie přes projekt pro stavební povolení až po prováděcí dokumentaci. Naši projektanti mají bohaté zkušenosti s různými typy staveb a jsou schopni navrhnout řešení přesně podle vašich požadavků. Samozřejmostí je i inženýrská činnost pro získání potřebných povolení.",
-    category: "Projektování",
+      "Ano, nabízíme bezplatné konzultace a poradenství v oblasti stavebních prací. Naši odborníci vám pomohou vybrat nejlepší řešení pro váš projekt, poradí s výběrem materiálů a technologií. Každý projekt začínáme důkladnou analýzou a návrhem řešení.",
+    category: "Konzultace",
   },
 ]
 
@@ -348,6 +341,7 @@ export default function Home() {
         <Header />
         <Hero />
       </div>
+      {/* Dynamický obsah zatím odstraněn */}
       <AnimatedStats categories={statsCategories} />
       <Services />
       <ProcessFlow
@@ -360,19 +354,8 @@ export default function Home() {
       <TestimonialsCarousel testimonials={testimonials} />
       <BlogSection articles={blogArticles} />
       <FaqAccordion questions={faqQuestions} />
-      <BuildingCalculator />
       <Contact />
       <Footer />
-
-      {/* Ukázka animovaného loga, které se spustí při najetí myší */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8">Naše logo</h2>
-          <div className="flex justify-center">
-            <AnimatedLogo width={300} height={150} onHover={true} />
-          </div>
-        </div>
-      </section>
     </main>
   )
 }
