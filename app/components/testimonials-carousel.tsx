@@ -145,7 +145,9 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.id}
-                ref={(el) => (testimonialRefs.current[index] = el)}
+                ref={(el) => {
+                  testimonialRefs.current[index] = el
+                }}
                 className={`${index === 0 ? "block" : "hidden"} opacity-0`}
               >
                 <Card className="border-none shadow-xl">

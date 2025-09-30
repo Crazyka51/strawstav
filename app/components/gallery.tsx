@@ -102,7 +102,7 @@ export default function Gallery() {
 
         <div ref={galleryRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
           {projects.map((project) => (
-            <div key={project.id} className="gallery-item">
+            <div key={project.id} className="gallery-item relative group">
               <Image
                 src={project.image || "/construction-team.jpg"}
                 alt={project.title}
@@ -110,7 +110,7 @@ export default function Gallery() {
                 height={600}
                 className="w-full h-64 object-cover rounded-lg"
               />
-              <div className="gallery-overlay">
+              <div className="gallery-overlay rounded-lg">
                 <div className="text-center p-4">
                   <h3 className="gallery-title">{project.title}</h3>
                   <p className="text-white mt-2 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
