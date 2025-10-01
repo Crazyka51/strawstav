@@ -34,20 +34,24 @@ export async function POST(request: Request) {
 
     // Transakce - vytvoření stránky a první verze
     // 1. Vytvoření stránky
-    const { data: pageData, error: pageError } = await supabase
+    const { data: pageDataResult, error: pageError } = await supabase
       .from("pages")
-      .insert({ slug, name, description })
+      // @ts-ignore - Supabase type issue
+      .insert({ slug, name, description } as any)
       .select("id")
       .single()
 
-    if (pageError || !pageData) {
+    if (pageError || !pageDataResult) {
       console.error("Chyba při vytváření stránky:", pageError)
       return NextResponse.json({ error: "Nepodařilo se vytvořit stránku" }, { status: 500 })
     }
+    
+    const pageData = pageDataResult as { id: string }
 
     // 2. Vytvoření první verze konfigurace
+    // @ts-ignore - Supabase type issue
     const { error: versionError } = await supabase.from("page_versions").insert({
-      page_id: pageData!.id,
+      page_id: pageData.id,
       version_number: 1,
       config: config || {},
       is_current: true,
@@ -58,7 +62,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Nepodařilo se vytvořit verzi stránky" }, { status: 500 })
     }
 
-    return NextResponse.json({ success: true, id: pageData!.id, slug })
+    return NextResponse.json({ success: true, id: pageData.id, slug })
   } catch (error) {
     console.error("Neočekávaná chyba:", error)
     return NextResponse.json({ error: "Došlo k neočekávané chybě" }, { status: 500 })

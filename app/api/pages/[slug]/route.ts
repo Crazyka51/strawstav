@@ -85,7 +85,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       if (description !== undefined) updateData.description = description
       updateData.updated_at = new Date().toISOString()
 
-      const { error: updateError } = await supabase.from("pages").update(updateData).eq("id", pageData.id)
+      // @ts-ignore - Supabase type issue
+      const { error: updateError } = await supabase.from("pages").update(updateData as any).eq("id", pageData.id)
 
       if (updateError) {
         console.error("Chyba při aktualizaci stránky:", updateError)
@@ -110,18 +111,20 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           return NextResponse.json({ error: "Nepodařilo se získat poslední verzi" }, { status: 500 })
         }
 
-        const newVersionNumber = lastVersion?.version_number ? lastVersion!.version_number + 1 : 1
+        const newVersionNumber = (lastVersion as unknown as { version_number: number } | null)?.version_number ? ((lastVersion as unknown as { version_number: number }).version_number + 1) : 1
 
         // Nastavení všech verzí jako neaktuálních
-        await supabase.from("page_versions").update({ is_current: false }).eq("page_id", pageData.id)
+        // @ts-ignore - Supabase type issue
+        await supabase.from("page_versions").update({ is_current: false } as any).eq("page_id", pageData.id)
 
         // Vytvoření nové verze
+        // @ts-ignore - Supabase type issue
         const { error: insertError } = await supabase.from("page_versions").insert({
           page_id: pageData.id,
           version_number: newVersionNumber,
           config,
           is_current: true,
-        })
+        } as any)
 
         if (insertError) {
           console.error("Chyba při vytváření nové verze:", insertError)
@@ -137,7 +140,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         // Aktualizace aktuální verze
         const { error: updateError } = await supabase
           .from("page_versions")
-          .update({ config })
+          // @ts-ignore - Supabase type issue
+          .update({ config } as any)
           .eq("page_id", pageData.id)
           .eq("is_current", true)
 

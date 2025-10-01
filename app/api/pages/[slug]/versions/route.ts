@@ -8,21 +8,23 @@ export async function GET(request: Request, { params }: { params: { slug: string
     const supabase = createServerSupabaseClient()
 
     // 1. Získání informací o stránce
-    const { data: pageData, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
+    const { data: pageDataResult, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
 
-    if (pageError || !pageData) {
+    if (pageError || !pageDataResult) {
       if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nebyla nalezena" }, { status: 404 })
       }
       console.error("Chyba při načítání stránky:", pageError)
       return NextResponse.json({ error: "Nepodařilo se načíst stránku" }, { status: 500 })
     }
+    
+    const pageData = pageDataResult as { id: string }
 
     // 2. Získání všech verzí stránky
     const { data: versions, error: versionsError } = await supabase
       .from("page_versions")
       .select("*")
-      .eq("page_id", pageData!.id)
+      .eq("page_id", pageData.id)
       .order("version_number", { ascending: false })
 
     if (versionsError) {

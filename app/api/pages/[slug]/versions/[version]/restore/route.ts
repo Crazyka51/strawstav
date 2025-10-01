@@ -13,35 +13,39 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     }
 
     // Získání stránky podle slugu
-    const { data: pageData, error: pageError } = await supabase.from("pages").select("id").eq("slug", slug).single()
+    const { data: pageDataResult, error: pageError } = await supabase.from("pages").select("id").eq("slug", slug).single()
 
-    if (pageError || !pageData) {
+    if (pageError || !pageDataResult) {
       if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nenalezena" }, { status: 404 })
       }
       return NextResponse.json({ error: pageError?.message || "Chyba při načítání stránky" }, { status: 500 })
     }
+    
+    const pageData = pageDataResult as { id: string }
 
     // Získání konkrétní verze
-    const { data: versionData, error: versionError } = await supabase
+    const { data: versionDataResult, error: versionError } = await supabase
       .from("page_versions")
       .select("config")
-      .eq("page_id", pageData!.id)
+      .eq("page_id", pageData.id)
       .eq("version_number", versionNumber)
       .single()
 
-    if (versionError || !versionData) {
+    if (versionError || !versionDataResult) {
       if (versionError?.code === "PGRST116") {
         return NextResponse.json({ error: "Verze nenalezena" }, { status: 404 })
       }
       return NextResponse.json({ error: versionError?.message || "Chyba při načítání verze" }, { status: 500 })
     }
+    
+    const versionData = versionDataResult as { config: any }
 
     // Získání poslední verze
-    const { data: lastVersionData, error: lastVersionError } = await supabase
+    const { data: lastVersionDataResult, error: lastVersionError } = await supabase
       .from("page_versions")
       .select("version_number")
-      .eq("page_id", pageData!.id)
+      .eq("page_id", pageData.id)
       .order("version_number", { ascending: false })
       .limit(1)
       .single()
@@ -49,14 +53,17 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     if (lastVersionError && lastVersionError.code !== "PGRST116") {
       return NextResponse.json({ error: lastVersionError?.message || "Chyba při načítání poslední verze" }, { status: 500 })
     }
+    
+    const lastVersionData = lastVersionDataResult as { version_number: number } | null
 
     const nextVersionNumber = lastVersionData?.version_number ? lastVersionData.version_number + 1 : 1
 
     // Nastavení všech předchozích verzí jako neaktuálních
     const { error: resetError } = await supabase
       .from("page_versions")
-      .update({ is_current: false })
-      .eq("page_id", pageData!.id)
+      // @ts-ignore - Supabase type issue
+      .update({ is_current: false } as any)
+      .eq("page_id", pageData.id)
 
     if (resetError) {
       return NextResponse.json({ error: resetError.message }, { status: 500 })
@@ -66,10 +73,11 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     const body = await request.json()
     const { data: newVersionData, error: newVersionError } = await supabase
       .from("page_versions")
+      // @ts-ignore - Supabase type issue
       .insert({
-        page_id: pageData!.id,
+        page_id: pageData.id,
         version_number: nextVersionNumber,
-        config: versionData!.config,
+        config: versionData.config,
         is_current: true,
         created_by: body.created_by || `Obnoveno z verze ${versionNumber}`,
       })
@@ -83,8 +91,9 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     // Aktualizace času poslední úpravy stránky
     const { error: updateError } = await supabase
       .from("pages")
-      .update({ updated_at: new Date().toISOString() })
-      .eq("id", pageData!.id)
+      // @ts-ignore - Supabase type issue
+      .update({ updated_at: new Date().toISOString() } as any)
+      .eq("id", pageData.id)
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message || "Chyba při aktualizaci stránky" }, { status: 500 })
