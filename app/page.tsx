@@ -16,6 +16,7 @@ import TestimonialsCarousel from "@/app/components/testimonials-carousel"
 import ProcessFlow from "@/app/components/process-flow"
 import FaqAccordion from "@/app/components/faq-accordion"
 import { Building, Calendar, Users, Heart, Award, Hammer, FileText, PencilRuler, CheckCircle } from "lucide-react"
+import { blogArticles } from "@/app/data/blog-articles"
 
 // Data realizovaných projektů STRAWSTAV
 const projectsData = [
@@ -180,58 +181,6 @@ const beforeAfterProjects = [
     location: "Střední Čechy",
     date: "2022-08",
     client: "Správa nemovitostí",
-  },
-]
-
-// Blog články
-const blogArticles = [
-  {
-    id: 1,
-    title: "Fasádní práce: Kdy je čas na rekonstrukci?",
-    excerpt:
-      "Fasáda domu není jen estetická záležitost, ale také důležitá ochrana stavby. Jak poznat, kdy je čas na rekonstrukci fasády a jak postupovat? V článku najdete praktické rady od našich odborníků.",
-    image: "/fasada_po.jpg",
-    date: "2023-09-15",
-    readTime: 6,
-    author: {
-      name: "Pavel Sláma",
-      avatar: "/author-pavel.jpg",
-      position: "Vedoucí stavebních prací",
-    },
-    category: "Fasády",
-    slug: "fasady-kdy-rekonstrukce",
-  },
-  {
-    id: 2,
-    title: "Problémy s vlhkostí? Řešením je odvětrání",
-    excerpt:
-      "Vlhkost v suterénu nebo přízemních prostorách může způsobit vážné škody. Jak účinně řešit problémy s vlhkostí pomocí moderních odvětrávacích systémů? Praktické rady a řešení od STRAWSTAV.",
-    image: "/odvetravani_1.jpg",
-    date: "2023-07-10",
-    readTime: 5,
-    author: {
-      name: "Pavel Sláma",
-      avatar: "/author-pavel.jpg",
-      position: "Technický specialista",
-    },
-    category: "Odvětrání",
-    slug: "problemy-s-vlhkosti-resenim-odvetravani",
-  },
-  {
-    id: 3,
-    title: "Zemní práce: Základ každé úspěšné stavby",
-    excerpt:
-      "Správně provedené zemní práce jsou základem každé kvalitní stavby. Co vše zahrnují zemní práce a proč je důležité svěřit je odborníkům? Seznamte se s našími službami v oblasti zemních prací.",
-    image: "/bagr.jpg",
-    date: "2023-05-20",
-    readTime: 4,
-    author: {
-      name: "Pavel Sláma",
-      avatar: "/author-pavel.jpg",
-      position: "Vedoucí zemních prací",
-    },
-    category: "Zemní práce",
-    slug: "zemni-prace-zaklad-uspesne-stavby",
   },
 ]
 
