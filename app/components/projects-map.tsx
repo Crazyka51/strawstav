@@ -47,8 +47,8 @@ export default function ProjectsMap({
   const mapRef = useRef<HTMLDivElement>(null)
   const [selectedProject, setSelectedProject] = useState<MapProject | null>(null)
   const [mapLoaded, setMapLoaded] = useState(false)
-  const [map, setMap] = useState<google.maps.Map | null>(null)
-  const [markers, setMarkers] = useState<google.maps.Marker[]>([])
+  const [map, setMap] = useState<any>(null)
+  const [markers, setMarkers] = useState<any[]>([])
 
   // Načtení Google Maps API
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function ProjectsMap({
 
     return () => {
       // Odstranění callback funkce při unmount
-      window.initMap = undefined
+      window.initMap = (() => {}) as any
     }
   }, [mapApiKey])
 
@@ -81,10 +81,10 @@ export default function ProjectsMap({
   useEffect(() => {
     if (!mapLoaded || !mapRef.current) return
 
-    const mapOptions: google.maps.MapOptions = {
+    const mapOptions: any = {
       center: center,
       zoom: zoom,
-      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      mapTypeId: window.google.maps.MapTypeId.ROADMAP,
       mapTypeControl: false,
       fullscreenControl: false,
       streetViewControl: false,
@@ -226,7 +226,7 @@ export default function ProjectsMap({
     setMap(newMap)
 
     // Přidání markerů pro projekty
-    const newMarkers: google.maps.Marker[] = []
+    const newMarkers: any[] = []
     projects.forEach((project) => {
       const marker = new window.google.maps.Marker({
         position: { lat: project.location.lat, lng: project.location.lng },

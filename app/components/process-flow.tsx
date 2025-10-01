@@ -178,7 +178,7 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
           {/* Kroky procesu */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
             {steps.map((step, index) => (
-              <div key={index} ref={(el) => (stepsRef.current[index] = el)} className="flex flex-col items-center">
+              <div key={index} ref={(el) => { stepsRef.current[index] = el }} className="flex flex-col items-center">
                 <div className="relative mb-8">
                   <div
                     className={`step-icon w-20 h-20 rounded-full flex items-center justify-center ${

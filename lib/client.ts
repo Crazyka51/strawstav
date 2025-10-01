@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js"
 import type { Database } from "./types"
 
 // Singleton instance pro klientskou část
-let supabaseInstance: ReturnType<typeof createClient> | null = null
+let supabaseInstance: ReturnType<typeof createClient<Database>> | null = null
 
 // Vytvoření Supabase klienta pro klientské komponenty
 export function createClientSupabaseClient() {

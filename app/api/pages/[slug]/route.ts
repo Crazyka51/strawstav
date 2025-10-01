@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from "next/server"
-import { createServerSupabaseClient } from "@/app/lib/server"
+import { createServerSupabaseClient } from "@/lib/server"
+import type { Database } from "@/lib/types"
+
+type Page = Database['public']['Tables']['pages']['Row']
+type PageVersion = Database['public']['Tables']['page_versions']['Row']
 
 interface RouteParams {
   params: {
@@ -13,28 +17,32 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     const { slug } = params
 
     // Získání stránky podle slugu
-    const { data: pageData, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
+    const { data: pageDataResult, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
 
-    if (pageError) {
-      if (pageError.code === "PGRST116") {
+    if (pageError || !pageDataResult) {
+      if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nenalezena" }, { status: 404 })
       }
       console.error("Chyba při načítání stránky:", pageError)
       return NextResponse.json({ error: "Nepodařilo se načíst stránku" }, { status: 500 })
     }
+    
+    const pageData: Page = pageDataResult
 
     // Získání aktuální verze konfigurace
-    const { data: versionData, error: versionError } = await supabase
+    const { data: versionDataResult, error: versionError } = await supabase
       .from("page_versions")
       .select("*")
       .eq("page_id", pageData.id)
       .eq("is_current", true)
       .single()
 
-    if (versionError) {
+    if (versionError || !versionDataResult) {
       console.error("Chyba při načítání konfigurace stránky:", versionError)
       return NextResponse.json({ error: "Nepodařilo se načíst konfiguraci stránky" }, { status: 500 })
     }
+    
+    const versionData: PageVersion = versionDataResult
 
     // Spojení dat stránky a konfigurace
     const result = {
@@ -58,15 +66,17 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { name, description, config, createNewVersion = false } = body
 
     // Získání stránky podle slugu
-    const { data: pageData, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
+    const { data: pageDataResult, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
 
-    if (pageError) {
-      if (pageError.code === "PGRST116") {
+    if (pageError || !pageDataResult) {
+      if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nenalezena" }, { status: 404 })
       }
       console.error("Chyba při načítání stránky:", pageError)
       return NextResponse.json({ error: "Nepodařilo se načíst stránku" }, { status: 500 })
     }
+    
+    const pageData: Page = pageDataResult
 
     // Aktualizace základních informací o stránce
     if (name || description !== undefined) {
@@ -100,7 +110,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           return NextResponse.json({ error: "Nepodařilo se získat poslední verzi" }, { status: 500 })
         }
 
-        const newVersionNumber = lastVersion ? lastVersion.version_number + 1 : 1
+        const newVersionNumber = lastVersion?.version_number ? lastVersion!.version_number + 1 : 1
 
         // Nastavení všech verzí jako neaktuálních
         await supabase.from("page_versions").update({ is_current: false }).eq("page_id", pageData.id)

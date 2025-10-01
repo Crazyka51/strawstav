@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/app/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/app/components/ui/dialog"
 import { Code, Copy, Download } from "lucide-react"
-import { useToast } from "@/app/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 interface JsonGeneratorProps {
   config: any

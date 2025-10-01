@@ -1,5 +1,44 @@
 import type { JSX } from "react"
 
+interface Component {
+  id: string
+  type: string
+  visible: boolean
+  content: {
+    text?: string
+    src?: string
+    url?: string
+    title?: string
+    description?: string
+  }
+  settings?: {
+    level?: number
+    color?: string
+    size?: string
+    alt?: string
+    caption?: string
+    width?: number
+    height?: number
+    borderRadius?: string
+    variant?: string
+    target?: string
+    icon?: string
+  }
+}
+
+interface Section {
+  id: string
+  type: string
+  title?: string
+  components: Component[]
+  settings?: {
+    background?: string
+    padding?: string
+    columns?: number
+    description?: string
+  }
+}
+
 interface SectionRendererProps {
   section: Section
 }

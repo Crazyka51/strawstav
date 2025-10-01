@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createServerSupabaseClient } from "@/app/lib/server"
+import { createServerSupabaseClient } from "@/lib/server"
 
 interface RouteParams {
   params: {
@@ -22,8 +22,8 @@ export async function GET(request: Request, { params }: RouteParams) {
     // Získání informací o stránce
     const { data: pageData, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
 
-    if (pageError) {
-      if (pageError.code === "PGRST116") {
+    if (pageError || !pageData) {
+      if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nebyla nalezena" }, { status: 404 })
       }
       console.error("Chyba při načítání stránky:", pageError)
@@ -34,12 +34,12 @@ export async function GET(request: Request, { params }: RouteParams) {
     const { data: versionData, error: versionError } = await supabase
       .from("page_versions")
       .select("*")
-      .eq("page_id", pageData.id)
+      .eq("page_id", pageData!.id)
       .eq("version_number", versionNumber)
       .single()
 
-    if (versionError) {
-      if (versionError.code === "PGRST116") {
+    if (versionError || !versionData) {
+      if (versionError?.code === "PGRST116") {
         return NextResponse.json({ error: "Verze nebyla nalezena" }, { status: 404 })
       }
       console.error("Chyba při načítání verze stránky:", versionError)
@@ -49,10 +49,10 @@ export async function GET(request: Request, { params }: RouteParams) {
     // Spojení dat stránky a konfigurace
     const result = {
       ...pageData,
-      config: versionData.config,
-      version: versionData.version_number,
-      is_current: versionData.is_current,
-      created_at: versionData.created_at,
+      config: versionData!.config,
+      version: versionData!.version_number,
+      is_current: versionData!.is_current,
+      created_at: versionData!.created_at,
     }
 
     return NextResponse.json(result)
@@ -75,33 +75,33 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     // Získání stránky podle slugu
     const { data: pageData, error: pageError } = await supabase.from("pages").select("id").eq("slug", slug).single()
 
-    if (pageError) {
-      if (pageError.code === "PGRST116") {
+    if (pageError || !pageData) {
+      if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nenalezena" }, { status: 404 })
       }
-      return NextResponse.json({ error: pageError.message }, { status: 500 })
+      return NextResponse.json({ error: pageError?.message || "Chyba při načítání stránky" }, { status: 500 })
     }
 
     // Získání konkrétní verze
     const { data: versionData, error: versionError } = await supabase
       .from("page_versions")
       .select("id")
-      .eq("page_id", pageData.id)
+      .eq("page_id", pageData!.id)
       .eq("version_number", versionNumber)
       .single()
 
-    if (versionError) {
-      if (versionError.code === "PGRST116") {
+    if (versionError || !versionData) {
+      if (versionError?.code === "PGRST116") {
         return NextResponse.json({ error: "Verze nenalezena" }, { status: 404 })
       }
-      return NextResponse.json({ error: versionError.message }, { status: 500 })
+      return NextResponse.json({ error: versionError?.message || "Chyba při načítání verze" }, { status: 500 })
     }
 
     // Nastavení všech předchozích verzí jako neaktuálních
     const { error: resetError } = await supabase
       .from("page_versions")
       .update({ is_current: false })
-      .eq("page_id", pageData.id)
+      .eq("page_id", pageData!.id)
 
     if (resetError) {
       return NextResponse.json({ error: resetError.message }, { status: 500 })
@@ -111,7 +111,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { error: updateError } = await supabase
       .from("page_versions")
       .update({ is_current: true })
-      .eq("id", versionData.id)
+      .eq("id", versionData!.id)
 
     if (updateError) {
       return NextResponse.json({ error: updateError.message }, { status: 500 })
@@ -121,7 +121,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { error: pageUpdateError } = await supabase
       .from("pages")
       .update({ updated_at: new Date().toISOString() })
-      .eq("id", pageData.id)
+      .eq("id", pageData!.id)
 
     if (pageUpdateError) {
       console.error("Chyba při aktualizaci času poslední změny:", pageUpdateError)

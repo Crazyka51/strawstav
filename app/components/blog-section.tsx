@@ -90,7 +90,7 @@ export default function BlogSection({ articles, showMoreLink = "/blog" }: BlogSe
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, index) => (
-            <div key={article.id} ref={(el) => (articleRefs.current[index] = el)} className="opacity-0">
+            <div key={article.id} ref={(el) => { articleRefs.current[index] = el }} className="opacity-0">
               <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:scale-[1.02]">
                 <div className="relative h-48 w-full">
                   <Image

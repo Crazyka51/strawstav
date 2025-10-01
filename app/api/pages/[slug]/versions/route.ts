@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { createServerSupabaseClient } from "@/app/lib/server"
+import { createServerSupabaseClient } from "@/lib/server"
 
 // GET /api/pages/[slug]/versions - Získání všech verzí stránky
 export async function GET(request: Request, { params }: { params: { slug: string } }) {
@@ -10,8 +10,8 @@ export async function GET(request: Request, { params }: { params: { slug: string
     // 1. Získání informací o stránce
     const { data: pageData, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
 
-    if (pageError) {
-      if (pageError.code === "PGRST116") {
+    if (pageError || !pageData) {
+      if (pageError?.code === "PGRST116") {
         return NextResponse.json({ error: "Stránka nebyla nalezena" }, { status: 404 })
       }
       console.error("Chyba při načítání stránky:", pageError)
@@ -22,7 +22,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
     const { data: versions, error: versionsError } = await supabase
       .from("page_versions")
       .select("*")
-      .eq("page_id", pageData.id)
+      .eq("page_id", pageData!.id)
       .order("version_number", { ascending: false })
 
     if (versionsError) {

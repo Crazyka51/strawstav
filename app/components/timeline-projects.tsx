@@ -140,7 +140,7 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
             {filteredProjects.map((project, index) => (
               <div
                 key={project.id}
-                ref={(el) => (projectRefs.current[index] = el)}
+                ref={(el) => { projectRefs.current[index] = el }}
                 className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center mb-20`}
               >
                 {/* Rok */}

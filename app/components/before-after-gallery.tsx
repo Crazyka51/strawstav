@@ -50,7 +50,7 @@ export default function BeforeAfterGallery({ projects, categories = [] }: Before
 
   // Funkce pro ovládání slideru
   const handleMouseDown = (
-    containerRefToUse: React.RefObject<HTMLDivElement>,
+    containerRefToUse: React.RefObject<HTMLDivElement | null>,
     setPositionFunc: (pos: number) => void,
   ) => {
     isDragging.current = true
@@ -64,7 +64,7 @@ export default function BeforeAfterGallery({ projects, categories = [] }: Before
 
   const handleMouseMove = (
     e: React.MouseEvent,
-    containerRefToUse: React.RefObject<HTMLDivElement>,
+    containerRefToUse: React.RefObject<HTMLDivElement | null>,
     setPositionFunc: (pos: number) => void,
   ) => {
     if (isDragging.current && containerRefToUse.current) {
@@ -79,7 +79,7 @@ export default function BeforeAfterGallery({ projects, categories = [] }: Before
 
   const handleTouchMove = (
     e: React.TouchEvent,
-    containerRefToUse: React.RefObject<HTMLDivElement>,
+    containerRefToUse: React.RefObject<HTMLDivElement | null>,
     setPositionFunc: (pos: number) => void,
   ) => {
     if (containerRefToUse.current) {
