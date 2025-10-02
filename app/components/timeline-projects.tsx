@@ -76,22 +76,68 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
     // Animace projektů
     projectRefs.current.forEach((project, index) => {
       if (project) {
-        const direction = index % 2 === 0 ? -50 : 50
-
-        gsap.fromTo(
-          project,
-          { x: direction, opacity: 0 },
-          {
-            x: 0,
-            opacity: 1,
-            duration: 0.8,
-            scrollTrigger: {
-              trigger: project,
-              start: "top 80%",
-              toggleActions: "play none none none",
+        // Mobilní animace
+        const mobileCard = project.querySelector('.md\\:hidden')
+        if (mobileCard) {
+          gsap.fromTo(
+            mobileCard,
+            { x: -30, opacity: 0 },
+            {
+              x: 0,
+              opacity: 1,
+              duration: 0.6,
+              scrollTrigger: {
+                trigger: project,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
             },
-          },
-        )
+          )
+        }
+
+        // Desktop animace
+        const desktopCard = project.querySelector('.hidden.md\\:flex')
+        if (desktopCard) {
+          const direction = index % 2 === 0 ? -50 : 50
+          const card = desktopCard.querySelector('.w-5\/12 .overflow-hidden')
+          const yearBadge = desktopCard.querySelector('.w-16.h-16')
+          
+          if (card) {
+            gsap.fromTo(
+              card,
+              { x: direction, opacity: 0, scale: 0.9 },
+              {
+                x: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 0.8,
+                scrollTrigger: {
+                  trigger: project,
+                  start: "top 80%",
+                  toggleActions: "play none none none",
+                },
+              },
+            )
+          }
+          
+          if (yearBadge) {
+            gsap.fromTo(
+              yearBadge,
+              { scale: 0, opacity: 0 },
+              {
+                scale: 1,
+                opacity: 1,
+                duration: 0.5,
+                delay: 0.3,
+                scrollTrigger: {
+                  trigger: project,
+                  start: "top 80%",
+                  toggleActions: "play none none none",
+                },
+              },
+            )
+          }
+        }
       }
     })
 
@@ -128,15 +174,15 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
           </TabsList>
         </Tabs>
 
-        <div ref={timelineRef} className="relative">
-          {/* Časová osa - tenčí a modernější */}
+        <div ref={timelineRef} className="relative max-w-6xl mx-auto">
+          {/* Časová osa - skrytá na mobilních zařízeních */}
           <div
             ref={lineRef}
-            className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-strawstav-red/80 via-strawstav-red to-strawstav-red/80 h-full rounded-full"
+            className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-strawstav-red/80 via-strawstav-red to-strawstav-red/80 h-full rounded-full"
           />
-          {/* Doplňující body na lini */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full top-0 shadow-sm" />
-          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full bottom-0 shadow-sm" />
+          {/* Doplňující body na lini - jen na desktopu */}
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full top-4 shadow-sm -ml-1" />
+          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full bottom-4 shadow-sm -ml-1" />
 
           {/* Projekty */}
           <div className="relative z-10">
