@@ -30,6 +30,12 @@ export default function Hero() {
           span.style.display = "inline-block"
           span.style.opacity = "0"
           span.style.transform = "translateY(20px)"
+          
+          // Přidej větší mezeru za písmenem "V"
+          if (char === "V") {
+            span.style.marginRight = "0.3em"
+          }
+          
           heading.appendChild(span)
         })
 

@@ -129,11 +129,14 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
         </Tabs>
 
         <div ref={timelineRef} className="relative">
-          {/* Časová osa */}
+          {/* Časová osa - tenčí a modernější */}
           <div
             ref={lineRef}
-            className="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-strawstav-red to-red-800 h-full"
+            className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-strawstav-red/80 via-strawstav-red to-strawstav-red/80 h-full rounded-full"
           />
+          {/* Doplňující body na lini */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full top-0 shadow-sm" />
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full bottom-0 shadow-sm" />
 
           {/* Projekty */}
           <div className="relative z-10">
@@ -141,58 +144,55 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
               <div
                 key={project.id}
                 ref={(el) => { projectRefs.current[index] = el }}
-                className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center mb-20`}
+                className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center mb-8`}
               >
-                {/* Rok */}
-                <div className="w-24 h-24 rounded-full bg-white border-4 border-strawstav-red flex items-center justify-center z-10 shadow-lg mb-6 md:mb-0">
-                  <span className="text-2xl font-bold">{project.year}</span>
+                {/* Rok - menší design */}
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-strawstav-red to-red-700 flex items-center justify-center z-10 shadow-md mb-4 md:mb-0 border-2 border-white">
+                  <span className="text-sm font-bold text-white">{project.year}</span>
                 </div>
 
-                {/* Obsah */}
-                <div className={`flex-1 ${index % 2 === 0 ? "md:mr-12" : "md:ml-12"} w-full md:w-auto`}>
-                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
-                    <div className="relative h-64 w-full">
+                {/* Obsah - kompaktní design */}
+                <div className={`flex-1 ${index % 2 === 0 ? "md:mr-8" : "md:ml-8"} w-full md:max-w-md`}>
+                  <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border-l-4 border-l-strawstav-red">
+                    <div className="relative h-40 w-full">
                       <Image
                         src={project.image || "/placeholder.svg"}
                         alt={project.title}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
+                        sizes="(max-width: 768px) 100vw, 400px"
                       />
-                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black to-transparent opacity-60" />
-                      <div className="absolute top-4 right-4">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      <div className="absolute top-2 right-2">
                         <Badge
                           variant="secondary"
-                          className="bg-strawstav-red text-white hover:bg-red-700 transition-colors"
+                          className="bg-white/90 text-strawstav-red text-xs font-medium backdrop-blur-sm"
                         >
                           {project.category}
                         </Badge>
                       </div>
-                      <div className="absolute bottom-4 left-4 text-white">
-                        <h3 className="text-2xl font-bold mb-1 drop-shadow-md">{project.title}</h3>
-                      </div>
                     </div>
-                    <CardContent className="p-6">
-                      <p className="text-gray-600 mb-4">{project.description}</p>
-                      <div className="flex flex-wrap gap-4 mb-4">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <MapPin size={16} className="mr-1" />
+                    <CardContent className="p-4">
+                      <div className="text-lg font-bold mb-2 text-strawstav-black line-clamp-2">{project.title}</div>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{project.description}</p>
+                      
+                      <div className="flex flex-col gap-1 mb-3">
+                        <div className="flex items-center text-xs text-gray-500">
+                          <MapPin size={12} className="mr-1 text-strawstav-red" />
                           {project.details.location}
                         </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Calendar size={16} className="mr-1" />
+                        <div className="flex items-center text-xs text-gray-500">
+                          <Calendar size={12} className="mr-1 text-strawstav-red" />
                           {project.details.duration}
                         </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Users size={16} className="mr-1" />
-                          {project.details.team}
-                        </div>
                       </div>
+                      
                       <Button
                         onClick={() => openProjectDetails(project)}
-                        className="w-full bg-strawstav-red hover:bg-red-700 text-white"
+                        size="sm"
+                        className="w-full bg-strawstav-red hover:bg-red-700 text-white text-xs h-8"
                       >
-                        Zobrazit detail <ChevronRight size={16} className="ml-1" />
+                        Detail projektu <ChevronRight size={12} className="ml-1" />
                       </Button>
                     </CardContent>
                   </Card>

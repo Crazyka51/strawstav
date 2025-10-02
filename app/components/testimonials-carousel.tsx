@@ -55,12 +55,17 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
 
     // Skrytí všech testimonials
     testimonialRefs.current.forEach((ref, index) => {
-      if (ref) {
+      if (ref && index !== activeIndex) {
         gsap.to(ref, {
           opacity: 0,
           x: index < activeIndex ? -50 : 50,
           duration: 0.3,
-          display: "none",
+          onComplete: () => {
+            if (ref) {
+              ref.style.display = "none"
+              ref.className = ref.className.replace("block opacity-100", "hidden opacity-0")
+            }
+          }
         })
       }
     })
@@ -68,14 +73,17 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
     // Zobrazení aktivního testimonial
     const activeRef = testimonialRefs.current[activeIndex]
     if (activeRef) {
+      activeRef.style.display = "block"
+      activeRef.className = activeRef.className.replace("hidden opacity-0", "block opacity-100")
+      
       gsap.fromTo(
         activeRef,
-        { opacity: 0, x: 50, display: "block" },
+        { opacity: 0, x: 50 },
         {
           opacity: 1,
           x: 0,
           duration: 0.5,
-          delay: 0.2,
+          delay: 0.1,
           onComplete: () => setIsAnimating(false),
         },
       )
@@ -84,14 +92,22 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
 
   // Automatické přepínání
   useEffect(() => {
-    autoplayTimerRef.current = setInterval(goToNext, 8000)
+    const startAutoplay = () => {
+      if (autoplayTimerRef.current) {
+        clearInterval(autoplayTimerRef.current)
+      }
+      autoplayTimerRef.current = setInterval(goToNext, 8000)
+    }
+
+    startAutoplay()
 
     return () => {
       if (autoplayTimerRef.current) {
         clearInterval(autoplayTimerRef.current)
+        autoplayTimerRef.current = null
       }
     }
-  }, [])
+  }, [activeIndex])
 
   // Zastavení autoplay při hoveru
   const stopAutoplay = () => {
@@ -126,6 +142,22 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
     )
   }
 
+  // Inicializace prvního elementu při mount
+  useEffect(() => {
+    if (testimonialRefs.current[0]) {
+      gsap.set(testimonialRefs.current[0], { opacity: 1, x: 0 })
+    }
+  }, [])
+
+  // Cleanup při unmount
+  useEffect(() => {
+    return () => {
+      if (autoplayTimerRef.current) {
+        clearInterval(autoplayTimerRef.current)
+      }
+    }
+  }, [])
+
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -148,7 +180,7 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
                 ref={(el) => {
                   testimonialRefs.current[index] = el
                 }}
-                className={`${index === 0 ? "block" : "hidden"} opacity-0`}
+                className={index === activeIndex ? "block opacity-100" : "hidden opacity-0"}
               >
                 <Card className="border-none shadow-xl">
                   <CardContent className="p-0">

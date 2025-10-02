@@ -27,10 +27,10 @@ export default function Header() {
       if (scrollY > 100) {
         setIsScrolled(true)
         
-        // Gradually hide logo when scrolling past hero section
+        // Keep logo visible when scrolling
         const logo = document.querySelector('.header-logo')
-        if (logo && scrollY > heroHeight * 0.3) {
-          gsap.to(logo, { opacity: 0, scale: 0.8, duration: 0.3 })
+        if (logo) {
+          gsap.to(logo, { opacity: 1, scale: 1, duration: 0.3 })
         }
       } else {
         setIsScrolled(false)
@@ -59,14 +59,12 @@ export default function Header() {
           : "bg-transparent py-4"
       }`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center min-h-[60px]">
+      <div className="container mx-auto px-4 flex justify-between items-center min-h-[80px]">
         <Link href="/" className="header-logo">
           <Logo 
-            width={isScrolled ? 120 : 150} 
-            height={isScrolled ? 48 : 60}
-            className={`transition-all duration-500 ${
-              isScrolled ? "opacity-80" : "opacity-100"
-            }`}
+            width={isScrolled ? 140 : 170} 
+            height={isScrolled ? 56 : 70}
+            className={`transition-all duration-500 opacity-100`}
           />
         </Link>
 
