@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
 import { Card, CardContent } from "@/app/components/ui/card"
 import { Badge } from "@/app/components/ui/badge"
@@ -42,6 +41,8 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [activeCategory, setActiveCategory] = useState("all")
+  const [visibleProjects, setVisibleProjects] = useState<Set<number>>(new Set())
+  const [timelineVisible, setTimelineVisible] = useState(false)
 
   // Získání unikátních kategorií, pokud nejsou poskytnuty
   const uniqueCategories =
@@ -51,100 +52,104 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
   const filteredProjects =
     activeCategory === "all" ? projects : projects.filter((project) => project.category === activeCategory)
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger)
-
-    // Animace časové osy
-    if (lineRef.current) {
-      gsap.fromTo(
-        lineRef.current,
-        { scaleY: 0, transformOrigin: "top" },
-        {
-          scaleY: 1,
-          ease: "none",
-          duration: 1.5,
-          scrollTrigger: {
-            trigger: timelineRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            scrub: 0.5,
-          },
-        },
-      )
-    }
-
-    // Animace projektů
-    projectRefs.current.forEach((project, index) => {
-      if (project) {
-        // Mobilní animace
-        const mobileCard = project.querySelector('.md\\:hidden')
-        if (mobileCard) {
+  // Intersection Observer pro časovou osu
+  const timelineObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && !timelineVisible) {
+        setTimelineVisible(true)
+        if (lineRef.current) {
           gsap.fromTo(
-            mobileCard,
-            { x: -30, opacity: 0 },
-            {
-              x: 0,
-              opacity: 1,
-              duration: 0.6,
-              scrollTrigger: {
-                trigger: project,
-                start: "top 85%",
-                toggleActions: "play none none none",
-              },
-            },
+            lineRef.current,
+            { scaleY: 0, transformOrigin: "top" },
+            { scaleY: 1, duration: 1.2, ease: "power2.out" }
           )
         }
+      }
+    })
+  }, [timelineVisible])
 
-        // Desktop animace
-        const desktopCard = project.querySelector('.hidden.md\\:flex')
-        if (desktopCard) {
-          const direction = index % 2 === 0 ? -50 : 50
-          const card = desktopCard.querySelector('.w-5\/12 .overflow-hidden')
-          const yearBadge = desktopCard.querySelector('.w-16.h-16')
+  // Intersection Observer pro projekty
+  const projectObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const projectElement = entry.target as HTMLElement
+        const projectIndex = parseInt(projectElement.dataset.index || '0')
+        
+        if (!visibleProjects.has(projectIndex)) {
+          setVisibleProjects(prev => new Set([...prev, projectIndex]))
           
-          if (card) {
+          // Animace pro mobilní zařízení
+          const mobileCard = projectElement.querySelector('.md\\:hidden')
+          if (mobileCard) {
             gsap.fromTo(
-              card,
-              { x: direction, opacity: 0, scale: 0.9 },
-              {
-                x: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 0.8,
-                scrollTrigger: {
-                  trigger: project,
-                  start: "top 80%",
-                  toggleActions: "play none none none",
-                },
-              },
+              mobileCard,
+              { x: -30, opacity: 0 },
+              { x: 0, opacity: 1, duration: 0.6, ease: "power2.out" }
             )
           }
-          
-          if (yearBadge) {
-            gsap.fromTo(
-              yearBadge,
-              { scale: 0, opacity: 0 },
-              {
-                scale: 1,
-                opacity: 1,
-                duration: 0.5,
-                delay: 0.3,
-                scrollTrigger: {
-                  trigger: project,
-                  start: "top 80%",
-                  toggleActions: "play none none none",
-                },
-              },
-            )
+
+          // Animace pro desktop
+          const desktopCard = projectElement.querySelector('.hidden.md\\:flex')
+          if (desktopCard) {
+            const direction = projectIndex % 2 === 0 ? -50 : 50
+            const card = desktopCard.querySelector('.w-5\\/12 .overflow-hidden')
+            const yearBadge = desktopCard.querySelector('.w-16.h-16')
+            
+            if (card) {
+              gsap.fromTo(
+                card,
+                { x: direction, opacity: 0, scale: 0.9 },
+                { x: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }
+              )
+            }
+            
+            if (yearBadge) {
+              gsap.fromTo(
+                yearBadge,
+                { scale: 0, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 0.5, delay: 0.3, ease: "back.out(1.7)" }
+              )
+            }
           }
         }
       }
     })
+  }, [visibleProjects])
+
+  // Nastavení Intersection Observerů
+  useEffect(() => {
+    const timelineObserverInstance = new IntersectionObserver(timelineObserver, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -20% 0px'
+    })
+
+    const projectObserverInstance = new IntersectionObserver(projectObserver, {
+      threshold: 0.2,
+      rootMargin: '0px 0px -15% 0px'
+    })
+
+    // Připojení observerů
+    if (timelineRef.current) {
+      timelineObserverInstance.observe(timelineRef.current)
+    }
+
+    projectRefs.current.forEach((project) => {
+      if (project) {
+        projectObserverInstance.observe(project)
+      }
+    })
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
+      timelineObserverInstance.disconnect()
+      projectObserverInstance.disconnect()
     }
-  }, [filteredProjects])
+  }, [filteredProjects, timelineObserver, projectObserver])
+
+  // Reset viditelnosti při změně kategorie
+  useEffect(() => {
+    setVisibleProjects(new Set())
+    setTimelineVisible(false)
+  }, [activeCategory])
 
   const openProjectDetails = (project: Project) => {
     setSelectedProject(project)
@@ -174,15 +179,15 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
           </TabsList>
         </Tabs>
 
-        <div ref={timelineRef} className="relative max-w-6xl mx-auto">
-          {/* Časová osa - skrytá na mobilních zařízeních */}
+        <div ref={timelineRef} className="relative">
+          {/* Časová osa - tenčí a modernější */}
           <div
             ref={lineRef}
-            className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-strawstav-red/80 via-strawstav-red to-strawstav-red/80 h-full rounded-full"
+            className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-strawstav-red/80 via-strawstav-red to-strawstav-red/80 h-full rounded-full"
           />
-          {/* Doplňující body na lini - jen na desktopu */}
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full top-4 shadow-sm -ml-1" />
-          <div className="hidden md:block absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full bottom-4 shadow-sm -ml-1" />
+          {/* Doplňující body na lini */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full top-0 shadow-sm" />
+          <div className="absolute left-1/2 transform -translate-x-1/2 w-2 h-2 bg-strawstav-red rounded-full bottom-0 shadow-sm" />
 
           {/* Projekty */}
           <div className="relative z-10">
@@ -190,6 +195,7 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
               <div
                 key={project.id}
                 ref={(el) => { projectRefs.current[index] = el }}
+                data-index={index}
                 className={`flex flex-col ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"} items-center mb-8`}
               >
                 {/* Rok - menší design */}
