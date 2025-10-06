@@ -82,10 +82,7 @@ export default function Header() {
           <Link href="#kontakt" className="nav-item nav-link">
             Kontakt
           </Link>
-          <Link href="/logo-editor" className="nav-item nav-link flex items-center">
-            <Settings size={16} className="mr-1" />
-            Editor loga
-          </Link>
+          
         </nav>
 
         {/* Mobile Menu Button */}
