@@ -4,7 +4,7 @@ import { Poppins } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/app/components/theme-provider"
 import MessengerChat from "@/app/components/messenger-chat"
-import { Analytics } from "@vercel/analytics/next"git 
+import { Analytics } from "@vercel/analytics/next"
 // Optimalizované načítání fontu
 const poppins = Poppins({
   subsets: ["latin"],
