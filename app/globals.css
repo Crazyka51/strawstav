@@ -182,9 +182,17 @@
   overflow: visible;
 }
 
+.header-logo {
+  @apply flex items-center justify-center transition-all duration-300;
+  max-height: 60px;
+  overflow: hidden;
+}
+
 .header-logo img {
   @apply transition-all duration-300;
   object-fit: contain;
+  max-height: 100%;
+  width: auto;
 }
 
 .nav-link {
@@ -210,6 +218,24 @@
 
 .mobile-nav-link {
   @apply block py-4 px-6 text-lg border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200;
+}
+
+/* Header styles */
+header {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Header logo container */
+.header-logo {
+  position: relative;
+  z-index: 101;
+}
+
+/* Ensure content doesn't overlap with fixed header */
+main {
+  position: relative;
+  z-index: 1;
 }
 
 /* Timeline utility classes */

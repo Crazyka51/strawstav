@@ -21,25 +21,11 @@ export default function Header() {
     // Handle scroll event with better logo behavior
     const handleScroll = () => {
       const scrollY = window.scrollY
-      const heroSection = document.querySelector('section')
-      const heroHeight = heroSection ? heroSection.offsetHeight : 800
       
-      if (scrollY > 100) {
+      if (scrollY > 50) {
         setIsScrolled(true)
-        
-        // Keep logo visible when scrolling
-        const logo = document.querySelector('.header-logo')
-        if (logo) {
-          gsap.to(logo, { opacity: 1, scale: 1, duration: 0.3 })
-        }
       } else {
         setIsScrolled(false)
-        
-        // Show logo when at top
-        const logo = document.querySelector('.header-logo')
-        if (logo) {
-          gsap.to(logo, { opacity: 1, scale: 1, duration: 0.3 })
-        }
       }
     }
 
@@ -53,18 +39,18 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${
         isScrolled 
           ? "bg-white/95 backdrop-blur-sm shadow-lg py-2" 
-          : "bg-transparent py-4"
+          : "bg-white/80 backdrop-blur-sm py-3"
       }`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center min-h-[80px]">
-        <Link href="/" className="header-logo">
+      <div className="container mx-auto px-4 flex justify-between items-center min-h-[70px] max-h-[70px] overflow-hidden">
+        <Link href="/" className="header-logo flex items-center justify-center">
           <Logo 
-            width={isScrolled ? 140 : 170} 
-            height={isScrolled ? 56 : 70}
-            className={`transition-all duration-500 opacity-100`}
+            width={isScrolled ? 120 : 140} 
+            height={isScrolled ? 48 : 56}
+            className={`transition-all duration-300`}
           />
         </Link>
 
