@@ -15,6 +15,7 @@ import BlogSection from "@/app/components/blog-section"
 import TestimonialsCarousel from "@/app/components/testimonials-carousel"
 import ProcessFlow from "@/app/components/process-flow"
 import FaqAccordion from "@/app/components/faq-accordion"
+import BackToTop from "@/app/components/back-to-top"
 import { Building, Calendar, Users, Heart, Award, Hammer, FileText, PencilRuler, CheckCircle } from "lucide-react"
 import { blogArticles } from "@/app/data/blog-articles"
 
@@ -112,30 +113,30 @@ const statsCategories = [
     id: "general",
     name: "Naše úspěchy v číslech",
     stats: [
-      { value: 85, label: "Dokončených projektů", icon: <Building size={40} />, suffix: "+" },
-      { value: 12, label: "Let zkušeností", icon: <Calendar size={40} /> },
-      { value: 15, label: "Kvalifikovaných pracovníků", icon: <Users size={40} /> },
-      { value: 95, label: "Spokojených klientů", icon: <Heart size={40} />, suffix: "%" },
+      { value: 85, label: "Dokončených projektů", icon: <Building size={30} />, suffix: "+", color: "from-strawstav-red to-red-700" },
+      { value: 12, label: "Let zkušeností", icon: <Calendar size={30} />, color: "from-blue-500 to-blue-700" },
+      { value: 15, label: "Kvalifikovaných pracovníků", icon: <Users size={30} />, color: "from-amber-500 to-amber-700" },
+      { value: 95, label: "Spokojených klientů", icon: <Heart size={30} />, suffix: "%", color: "from-green-500 to-green-700" },
     ],
   },
   {
     id: "projects",
     name: "Specializace",
     stats: [
-      { value: 35, label: "Rekonstrukcí domů", icon: <Building size={40} /> },
-      { value: 25, label: "Fasádních prací", icon: <Building size={40} /> },
-      { value: 15, label: "Zemních prací", icon: <Hammer size={40} /> },
-      { value: 10, label: "Správa nemovitostí", icon: <Building size={40} /> },
+      { value: 35, label: "Rekonstrukcí domů", icon: <Building size={30} />, color: "from-strawstav-red to-red-800" },
+      { value: 25, label: "Fasádních prací", icon: <Building size={30} />, color: "from-orange-400 to-orange-600" },
+      { value: 15, label: "Zemních prací", icon: <Hammer size={30} />, color: "from-amber-600 to-amber-800" },
+      { value: 10, label: "Správa nemovitostí", icon: <Building size={30} />, color: "from-blue-500 to-blue-700" },
     ],
   },
   {
     id: "services",
     name: "Služby",
     stats: [
-      { value: 5, label: "Hlavních služeb", icon: <Award size={40} /> },
-      { value: 24, label: "Hodin denně k dispozici", icon: <Calendar size={40} />, suffix: "/7" },
-      { value: 100, label: "Bezpečnost práce", icon: <Award size={40} />, suffix: "%" },
-      { value: 2, label: "Roky záruky", icon: <Award size={40} /> },
+      { value: 5, label: "Hlavních služeb", icon: <Award size={30} />, color: "from-purple-500 to-purple-700" },
+      { value: 24, label: "Hodin denně k dispozici", icon: <Calendar size={30} />, suffix: "/7", color: "from-green-600 to-green-800" },
+      { value: 100, label: "Bezpečnost práce", icon: <Award size={30} />, suffix: "%", color: "from-blue-500 to-blue-700" },
+      { value: 2, label: "Roky záruky", icon: <Award size={30} />, color: "from-strawstav-red to-red-700" },
     ],
   },
 ]
@@ -305,6 +306,7 @@ export default function Home() {
       <FaqAccordion questions={faqQuestions} />
       <Contact />
       <Footer />
+      <BackToTop />
     </main>
   )
 }

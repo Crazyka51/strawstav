@@ -95,8 +95,39 @@
   @apply bg-white rounded-lg p-6 shadow-lg transition-all duration-300 hover:shadow-xl;
 }
 
+/* Service Cards - tradiční styl */
+.service-card-traditional {
+  @apply transition-all duration-200;
+  min-height: 280px;
+  transform: translateZ(0);
+}
+
+.service-card-traditional:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 .service-icon {
   @apply w-16 h-16 mx-auto mb-4 text-strawstav-red;
+}
+
+.service-icon-container {
+  @apply relative z-10;
+}
+
+/* Back to top button styles */
+.back-to-top-button {
+  @apply fixed right-6 bottom-6 p-2 bg-strawstav-red text-white rounded-full shadow-md z-50 opacity-0 transition-all duration-300;
+  visibility: hidden;
+}
+
+.back-to-top-button.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.back-to-top-button:hover {
+  @apply bg-red-700;
 }
 
 .parallax-bg {
@@ -107,6 +138,11 @@
   @apply text-3xl md:text-4xl font-bold mb-8 text-center relative;
 }
 
+.section-title-border {
+  @apply border-b-4 border-strawstav-red px-2 pb-2;
+}
+
+/* Zachováváme původní stylování pro zpětnou kompatibilitu */
 .section-title::after {
   content: "";
   @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-strawstav-red;
@@ -229,5 +265,52 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+/* Circular Stats Styles */
+.stat-card {
+  @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300;
+}
+
+.stat-circle-wrapper {
+  @apply p-4 relative flex items-center justify-center;
+}
+
+.stat-circle-bg {
+  @apply rounded-full;
+}
+
+.stat-circle {
+  @apply overflow-visible;
+}
+
+.stat-circle-indicator {
+  transition: stroke-dashoffset 1.5s ease-in-out;
+}
+
+.stat-value {
+  @apply z-10 font-bold text-5xl;
+  background: linear-gradient(135deg, #333 0%, #a0001c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+  @apply shadow-md z-10;
+}
+
+.section-title-border {
+  @apply border-b-4 border-strawstav-red px-2 pb-2;
+}
+
+@media (max-width: 768px) {
+  .stat-value {
+    @apply text-4xl;
+  }
+  
+  .stat-icon {
+    @apply text-xl top-4;
   }
 }

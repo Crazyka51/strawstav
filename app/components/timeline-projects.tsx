@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef, useState, useCallback } from "react"
+import { useRef, useState, useCallback } from "react"
+import { useSafeEffect } from "@/hooks/use-safe-effect"
 import { gsap } from "gsap"
 import Image from "next/image"
 import { Card, CardContent } from "@/app/components/ui/card"
@@ -117,7 +118,7 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
   }, [visibleProjects])
 
   // Nastavení Intersection Observerů
-  useEffect(() => {
+  useSafeEffect(() => {
     const timelineObserverInstance = new IntersectionObserver(timelineObserver, {
       threshold: 0.1,
       rootMargin: '0px 0px -20% 0px'
@@ -146,7 +147,7 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
   }, [filteredProjects, timelineObserver, projectObserver])
 
   // Reset viditelnosti při změně kategorie
-  useEffect(() => {
+  useSafeEffect(() => {
     setVisibleProjects(new Set())
     setTimelineVisible(false)
   }, [activeCategory])
@@ -159,7 +160,11 @@ export default function TimelineProjects({ projects, categories = [] }: Timeline
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Naše významné projekty</h2>
+        <h2 className="section-title">
+          <span className="section-title-border">
+            Naše významné projekty
+          </span>
+        </h2>
         <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
           Prohlédněte si naše nejvýznamnější projekty realizované v průběhu let. Každý projekt odráží naši vášeň pro
           kvalitu a preciznost.

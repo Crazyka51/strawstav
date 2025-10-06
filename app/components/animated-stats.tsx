@@ -1,12 +1,10 @@
 
 "use client"
 
-import type React from "react"
-
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
+import { useSafeEffect } from "@/hooks/use-safe-effect"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Card, CardContent } from "@/app/components/ui/card"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/app/components/ui/tabs"
 
 interface Stat {
@@ -16,6 +14,7 @@ interface Stat {
   prefix?: string
   suffix?: string
   description?: string
+  color?: string
 }
 
 interface StatCategory {
@@ -35,103 +34,134 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
   const [hasAnimated, setHasAnimated] = useState<Record<string, boolean>>({})
   const [activeCategory, setActiveCategory] = useState(categories[0].id)
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger)
+  useSafeEffect(() => {
+    try {
+      gsap.registerPlugin(ScrollTrigger)
 
-    // Inicializace pole referencí pro každou kategorii
-    categories.forEach((category, i) => {
-      statRefs.current[i] = []
-    })
+      // Vytvoření GSAP kontextu pro lepší správu paměti
+      const ctx = gsap.context(() => {
+        // Inicializace pole referencí pro každou kategorii
+        categories.forEach((category, i) => {
+          statRefs.current[i] = []
+        })
 
-    const animateStats = (categoryId: string) => {
-      if (hasAnimated[categoryId]) return
+        const animateStats = (categoryId: string) => {
+          if (hasAnimated[categoryId]) return
 
-      const categoryIndex = categories.findIndex((cat) => cat.id === categoryId)
-      if (categoryIndex === -1) return
+          const categoryIndex = categories.findIndex((cat) => cat.id === categoryId)
+          if (categoryIndex === -1) return
 
-      const stats = statRefs.current[categoryIndex]
-      if (!stats) return
+          const stats = statRefs.current[categoryIndex]
+          if (!stats) return
 
-      stats.forEach((stat, index) => {
-        if (stat) {
-          // Animace karty
-          gsap.fromTo(
-            stat,
-            { y: 50, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.8,
-              delay: index * 0.1,
-              ease: "power2.out",
-            },
-          )
+          stats.forEach((stat, index) => {
+            if (stat) {
+              // Animace karty s pohybem nahoru a postupným objevováním
+              gsap.fromTo(
+                stat,
+                { y: 50, opacity: 0, scale: 0.9 },
+                {
+                  y: 0,
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.8,
+                  delay: index * 0.15,
+                  ease: "back.out(1.2)",
+                },
+              )
 
-          // Animace čísla - opravíme, aby se čísla skutečně animovala
-          const valueElement = stat.querySelector(".stat-value")
-          if (valueElement) {
-            const targetValue = Number.parseInt(valueElement.getAttribute("data-value") || "0")
-            const prefix = valueElement.getAttribute("data-prefix") || ""
-            const suffix = valueElement.getAttribute("data-suffix") || ""
+              // Animace kruhu
+              const circleElement = stat.querySelector(".stat-circle-indicator")
+              if (circleElement) {
+                // Animace kruhu od plného (282.6) k hodnotě odpovídající procentu z maximální hodnoty v dané kategorii
+                // Pro jednoduchost nastavíme vždy stejnou animaci
+                gsap.fromTo(
+                  circleElement, 
+                  { strokeDashoffset: 282.6 }, 
+                  {
+                    strokeDashoffset: 0, // Plný kruh
+                    duration: 1.5,
+                    delay: index * 0.15 + 0.3,
+                    ease: "power2.inOut"
+                  }
+                )
+              }
 
-            // Nastavíme počáteční hodnotu na 0
-            valueElement.textContent = `${prefix}0${suffix}`
+              // Animace čísla
+              const valueElement = stat.querySelector(".stat-value")
+              if (valueElement) {
+                const targetValue = Number.parseInt(valueElement.getAttribute("data-value") || "0")
+                const prefix = valueElement.getAttribute("data-prefix") || ""
+                const suffix = valueElement.getAttribute("data-suffix") || ""
 
-            // Animujeme hodnotu od 0 do cílové hodnoty
-            gsap.to(valueElement, {
-              innerText: targetValue,
-              duration: 2,
-              delay: index * 0.1 + 0.3,
-              ease: "power2.out",
-              snap: { innerText: 1 },
-              onUpdate: function () {
-                const currentValue = Math.floor(Number(this.targets()[0].innerText))
-                valueElement.textContent = `${prefix}${currentValue}${suffix}`
-              },
-            })
-          }
+                // Nastavíme počáteční hodnotu na 0
+                valueElement.textContent = `${prefix}0${suffix}`
+
+                // Vylepšená animace hodnoty s jemnějším průběhem
+                gsap.to(valueElement, {
+                  innerText: targetValue,
+                  duration: 2,
+                  delay: index * 0.15 + 0.5,
+                  ease: "power1.inOut",
+                  snap: { innerText: 1 },
+                  onUpdate: function () {
+                    const currentValue = Math.floor(Number(this.targets()[0].innerText))
+                    valueElement.textContent = `${prefix}${currentValue}${suffix}`
+                  },
+                })
+              }
+            }
+          })
+
+          setHasAnimated((prev) => ({ ...prev, [categoryId]: true }))
         }
-      })
 
-      setHasAnimated((prev) => ({ ...prev, [categoryId]: true }))
-    }
+        // Nastavení ScrollTriggeru pro každou kategorii
+        categories.forEach((category) => {
+          ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: "top 70%",
+            onEnter: () => {
+              if (category.id === activeCategory) {
+                animateStats(category.id)
+              }
+            },
+          })
+        })
 
-    // Nastavení ScrollTriggeru pro každou kategorii
-    categories.forEach((category) => {
-      const trigger = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top 70%",
-        onEnter: () => {
-          if (category.id === activeCategory) {
-            animateStats(category.id)
-          }
-        },
-      })
+        // Animace při změně kategorie
+        if (activeCategory) {
+          animateStats(activeCategory)
+        }
+      }, sectionRef) // Použití GSAP kontextu pro sectionRef scope
 
+      // Funkce pro úklid
       return () => {
-        trigger.kill()
+        // Vyčistíme GSAP kontext a všechny ScrollTriggery
+        ctx.revert()
       }
-    })
-
-    // Animace při změně kategorie
-    if (activeCategory) {
-      animateStats(activeCategory)
+    } catch (error) {
+      console.error("Chyba při inicializaci GSAP animací:", error)
     }
   }, [categories, activeCategory, hasAnimated])
 
   return (
     <section ref={sectionRef} className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Naše úspěchy v číslech</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
+          <span className="border-b-4 border-strawstav-red px-2 pb-2">
+            Naše úspěchy v číslech
+          </span>
+        </h2>
         <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
           Za dobu naší existence jsme dosáhli významných úspěchů v různých oblastech stavebnictví. Podívejte se na
           konkrétní čísla, která hovoří za nás.
         </p>
 
-        <Tabs defaultValue={categories[0].id} onValueChange={setActiveCategory} className="mb-8">
-          <TabsList className="flex flex-wrap justify-center">
+        <Tabs defaultValue={categories[0].id} onValueChange={setActiveCategory} className="mb-12">
+          <TabsList className="flex flex-wrap justify-center bg-gray-50 p-1 rounded-lg border border-gray-100 shadow-sm">
             {categories.map((category) => (
-              <TabsTrigger key={category.id} value={category.id}>
+              <TabsTrigger key={category.id} value={category.id} className="px-5 py-2 data-[state=active]:bg-white data-[state=active]:text-strawstav-red">
                 {category.name}
               </TabsTrigger>
             ))}
@@ -153,24 +183,63 @@ export default function AnimatedStats({ categories }: AnimatedStatsProps) {
                       }
                       statRefs.current[categoryIndex][statIndex] = el
                     }}
-                    className={hasAnimated[category.id] ? "opacity-100" : "opacity-0"}
+                    className={`${hasAnimated[category.id] ? "opacity-100" : "opacity-0"} transform transition-all`}
                   >
-                    <Card className="h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-strawstav-red to-red-800"></div>
-                      <CardContent className="p-6 flex flex-col items-center justify-center text-center">
-                        <div className="text-strawstav-red mb-4 text-4xl">{stat.icon}</div>
+                    <div className="stat-card relative p-2 hover:scale-105 transition-transform duration-300 border border-gray-200 rounded-sm overflow-hidden shadow-sm">
+                      <div className="bg-strawstav-red h-1"></div>
+                      <div className="stat-circle-wrapper relative w-full aspect-square flex items-center justify-center">
+                        {/* Pozadí kruhu s gradientem */}
+                        <div className="stat-circle-bg absolute inset-0 rounded-full bg-gradient-to-br from-strawstav-red to-red-700 opacity-10"></div>
+                        
+                        {/* Animovaný kruh kolem dokola */}
+                        <svg className="stat-circle absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
+                          <circle 
+                            className="stat-circle-track"
+                            cx="50" 
+                            cy="50" 
+                            r="45" 
+                            fill="transparent"
+                            strokeWidth="3"
+                            stroke="rgba(0,0,0,0.05)"
+                          />
+                          <circle 
+                            className="stat-circle-indicator"
+                            cx="50" 
+                            cy="50" 
+                            r="45" 
+                            fill="transparent"
+                            strokeWidth="4"
+                            stroke="#a0001c"
+                            strokeDasharray="282.6"  // 2πr = 2 * π * 45
+                            strokeDashoffset="282.6" // Bude animováno pomocí GSAP
+                            strokeLinecap="round"
+                          />
+                        </svg>
+                        
+                        {/* Ikona v kruhu */}
+                        <div className="stat-icon absolute top-6 left-1/2 transform -translate-x-1/2 p-2 bg-strawstav-red rounded-full shadow-sm text-2xl">
+                          <div className="text-white">
+                            {stat.icon}
+                          </div>
+                        </div>
+                        
+                        {/* Hodnota statistiky */}
                         <div
-                          className="stat-value text-4xl font-bold mb-2"
+                          className="stat-value text-5xl font-bold text-gray-800"
                           data-value={stat.value}
                           data-prefix={stat.prefix || ""}
                           data-suffix={stat.suffix || ""}
                         >
                           {stat.prefix || ""}5{stat.suffix || ""}
                         </div>
-                        <div className="text-gray-700 font-medium mb-2">{stat.label}</div>
-                        {stat.description && <div className="text-gray-500 text-sm">{stat.description}</div>}
-                      </CardContent>
-                    </Card>
+                      </div>
+                      
+                      {/* Text pod kruhem */}
+                      <div className="mt-3 text-center">
+                        <div className="text-gray-700 font-medium">{stat.label}</div>
+                        {stat.description && <div className="text-gray-500 text-sm mt-1">{stat.description}</div>}
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

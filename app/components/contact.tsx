@@ -2,7 +2,8 @@
 
 import type React from "react"
 
-import { useEffect, useRef, type FormEvent, useState } from "react"
+import { useRef, type FormEvent, useState } from "react"
+import { useSafeEffect } from "@/hooks/use-safe-effect"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Phone, Mail, MapPin } from "lucide-react"
@@ -23,7 +24,7 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
 
-  useEffect(() => {
+  useSafeEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
     // Animate section title
@@ -117,7 +118,9 @@ export default function Contact() {
     <section id="kontakt" ref={sectionRef} className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         <h2 ref={titleRef} className="section-title">
-          Kontaktujte nás
+          <span className="section-title-border">
+            Kontaktujte nás
+          </span>
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
@@ -199,7 +202,7 @@ export default function Contact() {
               </div>
               <div>
                 <h3 className="text-lg font-medium mb-1">Telefon</h3>
-                <p className="text-gray-600">+420 123 456 789</p>
+                <p className="text-gray-600">+420 602 766 755</p>
               </div>
             </div>
 
@@ -222,16 +225,35 @@ export default function Contact() {
                 <p className="text-gray-600">
                   STRAWSTAV S.R.O.
                   <br />
-                  Stavební 123
+                  Prvního pluku 320/17
                   <br />
-                  123 45 Praha
+                  Karlín, 186 00, Praha 8
                 </p>
               </div>
             </div>
 
-            <div className="mt-8 h-64 bg-gray-200 rounded-lg">
-              {/* Map placeholder - would be replaced with actual map integration */}
-              <div className="w-full h-full flex items-center justify-center text-gray-500">Mapa bude zde</div>
+            <div className="mt-8 h-64 rounded-lg overflow-hidden shadow-md border border-gray-200">
+              <a 
+                href="https://www.openstreetmap.org/?mlat=50.09121814453243&mlon=14.441955517554467&zoom=17" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="relative block w-full h-full"
+                title="Zobrazit sídlo firmy na OpenStreetMap"
+              >
+                <iframe 
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=14.436934590339662%2C50.08868590210622%2C14.446976444769546%2C50.0937495801953&amp;layer=mapnik&amp;marker=50.09121814453243%2C14.441955517554467" 
+                  width="100%" 
+                  height="100%" 
+                  style={{ border: 0 }} 
+                  allowFullScreen 
+                  loading="lazy" 
+                  title="Mapa sídla firmy STRAWSTAV S.R.O."
+                  aria-label="Interaktivní mapa sídla firmy STRAWSTAV S.R.O. na OpenStreetMap"
+                ></iframe>
+                <div className="absolute top-0 left-0 right-0 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-20 text-white p-2 text-center">
+                  Klikněte pro zobrazení na OpenStreetMap
+                </div>
+              </a>
             </div>
           </div>
         </div>

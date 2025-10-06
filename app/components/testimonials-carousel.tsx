@@ -2,7 +2,8 @@
 
 import { Badge } from "@/app/components/ui/badge"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
+import { useSafeEffect } from "@/hooks/use-safe-effect"
 import { gsap } from "gsap"
 import Image from "next/image"
 import { Card, CardContent } from "@/app/components/ui/card"
@@ -48,7 +49,7 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
   }
 
   // Animace při změně aktivního indexu
-  useEffect(() => {
+  useSafeEffect(() => {
     if (testimonialRefs.current.length === 0) return
 
     setIsAnimating(true)
@@ -91,7 +92,7 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
   }, [activeIndex])
 
   // Automatické přepínání
-  useEffect(() => {
+  useSafeEffect(() => {
     const startAutoplay = () => {
       if (autoplayTimerRef.current) {
         clearInterval(autoplayTimerRef.current)
@@ -143,14 +144,14 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
   }
 
   // Inicializace prvního elementu při mount
-  useEffect(() => {
+  useSafeEffect(() => {
     if (testimonialRefs.current[0]) {
       gsap.set(testimonialRefs.current[0], { opacity: 1, x: 0 })
     }
   }, [])
 
   // Cleanup při unmount
-  useEffect(() => {
+  useSafeEffect(() => {
     return () => {
       if (autoplayTimerRef.current) {
         clearInterval(autoplayTimerRef.current)
@@ -161,7 +162,11 @@ export default function TestimonialsCarousel({ testimonials }: TestimonialsCarou
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Co o nás říkají klienti</h2>
+        <h2 className="section-title">
+          <span className="section-title-border">
+            Co o nás říkají klienti
+          </span>
+        </h2>
         <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
           Přečtěte si, co o spolupráci s námi říkají naši spokojení klienti. Jejich zpětná vazba je pro nás tím
           nejcennějším oceněním.

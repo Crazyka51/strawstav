@@ -135,7 +135,11 @@ export default function BeforeAfterGallery({ projects, categories = [] }: Before
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Před a po realizaci</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-6">
+          <span className="border-b-4 border-strawstav-red px-2 pb-2">
+            Před a po realizaci
+          </span>
+        </h2>
         <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
           Posuňte slider a podívejte se na rozdíl před a po realizaci našich projektů. Přesvědčte se o kvalitě naší
           práce na vlastní oči.

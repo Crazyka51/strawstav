@@ -103,9 +103,9 @@ export default function Footer() {
             <h3 className="text-lg font-medium mb-4">Kontakt</h3>
             <address className="not-italic text-gray-400">
               <p className="mb-2">STRAWSTAV S.R.O.</p>
-              <p className="mb-2">Stavební 123</p>
-              <p className="mb-2">123 45 Praha</p>
-              <p className="mb-2">Tel: +420 123 456 789</p>
+              <p className="mb-2">Prvního pluku 320/17</p>
+              <p className="mb-2">Karlín, 186 00 Praha</p>
+              <p className="mb-2">Tel: +420 602 766 755</p>
               <p>Email: info@strawstav.cz</p>
             </address>
           </div>

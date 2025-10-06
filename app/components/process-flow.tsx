@@ -2,7 +2,8 @@
 
 import type React from "react"
 
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
+import { useSafeEffect } from "@/hooks/use-safe-effect"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Card, CardContent } from "@/app/components/ui/card"
@@ -25,7 +26,7 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
   const stepsRef = useRef<(HTMLDivElement | null)[]>([])
   const lineRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useSafeEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
     // Animace nadpisu
@@ -162,7 +163,11 @@ export default function ProcessFlow({ steps, title = "Jak probíhá spolupráce"
   return (
     <section ref={sectionRef} className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="section-title text-3xl md:text-4xl font-bold mb-4 text-center">{title}</h2>
+        <h2 className="section-title">
+          <span className="section-title-border">
+            {title}
+          </span>
+        </h2>
         {description && (
           <p className="section-description text-gray-600 text-center max-w-3xl mx-auto mb-16">{description}</p>
         )}

@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
+import { useSafeEffect } from "@/hooks/use-safe-effect"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import Image from "next/image"
@@ -35,7 +36,7 @@ export default function BlogSection({ articles, showMoreLink = "/blog" }: BlogSe
   const sectionRef = useRef<HTMLElement>(null)
   const articleRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  useEffect(() => {
+  useSafeEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
 
     // Animace článků
@@ -75,7 +76,11 @@ export default function BlogSection({ articles, showMoreLink = "/blog" }: BlogSe
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Odborné články a novinky</h2>
+            <h2 className="section-title text-left">
+              <span className="section-title-border">
+                Odborné články a novinky
+              </span>
+            </h2>
             <p className="text-gray-600 max-w-2xl">
               Přečtěte si naše nejnovější články o trendech ve stavebnictví, technologiích a tipech pro vaše stavební
               projekty.

@@ -56,7 +56,11 @@ export default function FaqAccordion({ questions, categories = [] }: FaqAccordio
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">Často kladené dotazy</h2>
+        <h2 className="section-title">
+          <span className="section-title-border">
+            Často kladené dotazy
+          </span>
+        </h2>
         <p className="text-gray-600 text-center max-w-3xl mx-auto mb-12">
           Našli jste odpověď na svou otázku? Pokud ne, neváhejte nás kontaktovat a rádi vám pomůžeme.
         </p>
