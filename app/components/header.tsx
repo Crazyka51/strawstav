@@ -110,10 +110,7 @@ export default function Header() {
           <Link href="#kontakt" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
             Kontakt
           </Link>
-          <Link href="/logo-editor" className="mobile-nav-link flex items-center" onClick={() => setIsMenuOpen(false)}>
-            <Settings size={16} className="mr-1" />
-            Editor loga
-          </Link>
+          
         </div>
       </div>
 
