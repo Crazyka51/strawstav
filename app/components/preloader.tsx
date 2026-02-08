@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import Image from "next/image"
 import { Hourglass } from "lucide-react"
 
 export default function Preloader() {
+  const [isMounted, setIsMounted] = useState(false)
   const preloaderRef = useRef<HTMLDivElement>(null)
   const loaderIconRef = useRef<HTMLDivElement>(null)
   const logoContainerRef = useRef<HTMLDivElement>(null)
@@ -16,6 +17,12 @@ export default function Preloader() {
   const caraRef = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+
     // Zajistíme, že logo container je na začátku skrytý
     gsap.set(logoContainerRef.current, { opacity: 0 })
 
@@ -122,9 +129,14 @@ export default function Preloader() {
     }
 
     return () => {
-      gsap.killTweensOf(loaderIconRef.current)
+      gsap.killTweensOf([loaderIconRef.current, logoContainerRef.current, strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current, caraRef.current])
     }
-  }, [])
+  }, [isMounted])
+
+  // Render nothing on server to prevent hydration issues
+  if (!isMounted) {
+    return null
+  }
 
   return (
     <div ref={preloaderRef} className="preloader">

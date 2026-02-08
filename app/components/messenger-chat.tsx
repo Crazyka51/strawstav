@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import Script from "next/script"
 
 // Rozšíření Window interface pro TypeScript
@@ -11,8 +12,19 @@ declare global {
 }
 
 export default function MessengerChat() {
+  const [isMounted, setIsMounted] = useState(false)
+  
   // Pro demonstrační účely použijeme ukázkové ID
   const FB_PAGE_ID = "100054237254373"; // Změňte na skutečné ID vaší FB stránky
+  
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+  
+  // Render nothing on server to avoid hydration mismatch
+  if (!isMounted) {
+    return null
+  }
   
   return (
     <>
