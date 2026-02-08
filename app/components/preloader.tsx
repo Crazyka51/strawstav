@@ -129,7 +129,14 @@ export default function Preloader() {
     }
 
     return () => {
-      gsap.killTweensOf([loaderIconRef.current, logoContainerRef.current, strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current, caraRef.current].filter(Boolean))
+      // GSAP handles null/undefined values gracefully, so we can pass the refs directly
+      if (loaderIconRef.current) gsap.killTweensOf(loaderIconRef.current)
+      if (logoContainerRef.current) gsap.killTweensOf(logoContainerRef.current)
+      if (strechaRef.current) gsap.killTweensOf(strechaRef.current)
+      if (podkroviRef.current) gsap.killTweensOf(podkroviRef.current)
+      if (obrysdomuRef.current) gsap.killTweensOf(obrysdomuRef.current)
+      if (textRef.current) gsap.killTweensOf(textRef.current)
+      if (caraRef.current) gsap.killTweensOf(caraRef.current)
     }
   }, [isMounted])
 
