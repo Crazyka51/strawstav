@@ -129,7 +129,7 @@ export default function Preloader() {
     }
 
     return () => {
-      gsap.killTweensOf([loaderIconRef.current, logoContainerRef.current, strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current, caraRef.current])
+      gsap.killTweensOf([loaderIconRef.current, logoContainerRef.current, strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current, caraRef.current].filter(Boolean))
     }
   }, [isMounted])
 
