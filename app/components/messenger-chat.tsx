@@ -33,7 +33,7 @@ export default function MessengerChat() {
       
       {/* Facebook SDK Script - použití afterInteractive pro bezpečnější načítání */}
       <Script
-        id="facebook-jssdk"
+        id="facebook-init"
         strategy="afterInteractive"
       >
         {`

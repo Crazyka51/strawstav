@@ -15,6 +15,8 @@ export default function Preloader() {
   const obrysdomuRef = useRef<HTMLImageElement>(null)
   const textRef = useRef<HTMLImageElement>(null)
   const caraRef = useRef<HTMLImageElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     setIsMounted(true)
@@ -64,7 +66,7 @@ export default function Preloader() {
 
                 // Vyšleme vlastní událost, že preloader byl dokončen
                 // DŮLEŽITÉ: Vyšleme událost až po úplném skrytí preloaderu
-                setTimeout(() => {
+                timeoutRef.current = setTimeout(() => {
                   document.dispatchEvent(new CustomEvent("preloaderComplete"))
                 }, 100)
               }
@@ -72,6 +74,9 @@ export default function Preloader() {
           })
         },
       })
+      
+      // Store timeline for cleanup
+      timelineRef.current = tl
 
       // Set initial states
       gsap.set([strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current], {
@@ -129,7 +134,7 @@ export default function Preloader() {
     }
 
     return () => {
-      // GSAP handles null/undefined values gracefully, so we can pass the refs directly
+      // Kill all tweens for individual refs
       if (loaderIconRef.current) gsap.killTweensOf(loaderIconRef.current)
       if (logoContainerRef.current) gsap.killTweensOf(logoContainerRef.current)
       if (strechaRef.current) gsap.killTweensOf(strechaRef.current)
@@ -137,6 +142,19 @@ export default function Preloader() {
       if (obrysdomuRef.current) gsap.killTweensOf(obrysdomuRef.current)
       if (textRef.current) gsap.killTweensOf(textRef.current)
       if (caraRef.current) gsap.killTweensOf(caraRef.current)
+      if (preloaderRef.current) gsap.killTweensOf(preloaderRef.current)
+      
+      // Kill the timeline
+      if (timelineRef.current) {
+        timelineRef.current.kill()
+        timelineRef.current = null
+      }
+      
+      // Clear any pending timeouts
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
     }
   }, [isMounted])
 
