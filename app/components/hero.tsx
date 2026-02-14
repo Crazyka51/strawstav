@@ -126,27 +126,30 @@ export default function Hero() {
     <section
       ref={sectionRef}
       className={`relative min-h-screen flex items-center justify-center pt-20 overflow-hidden transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
-      style={{ background: "linear-gradient(to bottom, #ffffff, #f5f5f5)" }}
+      style={{ background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f5f5f5 100%)" }}
     >
-      {/* Background shapes inspired by logo */}
-      <div className="hero-shape absolute top-[20%] left-[10%] w-32 h-32 bg-strawstav-red opacity-5 rounded-tr-3xl rotate-12"></div>
-      <div className="hero-shape absolute bottom-[30%] right-[15%] w-48 h-24 bg-strawstav-black opacity-5 rounded-bl-3xl -rotate-12"></div>
-      <div className="hero-shape absolute top-[40%] right-[25%] w-24 h-24 bg-strawstav-red opacity-5 rotate-45"></div>
-      <div className="hero-shape absolute bottom-[20%] left-[20%] w-36 h-20 bg-strawstav-black opacity-5 -rotate-15"></div>
+      {/* Animated background shapes */}
+      <div className="hero-shape absolute top-[20%] left-[10%] w-32 h-32 bg-strawstav-red opacity-8 rounded-tr-3xl rotate-12 blur-3xl"></div>
+      <div className="hero-shape absolute bottom-[30%] right-[15%] w-48 h-24 bg-strawstav-black opacity-8 rounded-bl-3xl -rotate-12 blur-3xl"></div>
+      <div className="hero-shape absolute top-[40%] right-[25%] w-24 h-24 bg-strawstav-red opacity-6 rotate-45 blur-2xl"></div>
+      <div className="hero-shape absolute bottom-[20%] left-[20%] w-36 h-20 bg-strawstav-black opacity-6 -rotate-15 blur-3xl"></div>
 
-      <div className="container mx-auto px-4 text-center z-10">
-        <h1 ref={headingRef} className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-strawstav-black">
+      {/* Grid background accent */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5 pointer-events-none"></div>
+
+      <div className="container mx-auto px-4 text-center z-10 relative">
+        <h1 ref={headingRef} className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-strawstav-black leading-tight">
           STRAWSTAV
           <br />
-          S.R.O.
+          <span className="bg-gradient-to-r from-strawstav-red to-strawstav-red-light bg-clip-text text-transparent">S.R.O.</span>
         </h1>
-        <p ref={subheadingRef} className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto">
+        <p ref={subheadingRef} className="text-lg md:text-xl lg:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
           Profesionální stavební činnost, úklid bytových domů, správa nemovitostí, údržba zeleně a zemní práce.
         </p>
         <Link
           href="#sluzby"
           ref={buttonRef}
-          className="inline-block bg-strawstav-red text-white font-medium py-3 px-8 rounded-md hover:bg-red-700 transition-all duration-300 transform hover:scale-105"
+          className="inline-block bg-gradient-to-r from-strawstav-red to-strawstav-red-dark text-white font-semibold py-4 px-10 rounded-xl hover:shadow-elegant transition-all duration-300 transform hover:scale-110 active:scale-95 cursor-pointer"
         >
           Naše služby
         </Link>

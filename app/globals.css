@@ -70,8 +70,31 @@
   body {
     @apply bg-white text-black font-sans;
   }
+
+  /* Improved typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
 }
 
+/* Preloader styles */
 .preloader {
   position: fixed;
   top: 0;
@@ -91,11 +114,26 @@
   position: relative;
 }
 
+/* Modern Service Cards */
 .service-card {
-  @apply bg-white rounded-lg p-6 shadow-lg transition-all duration-300 hover:shadow-xl;
+  @apply bg-white rounded-2xl p-8 shadow-elegant transition-all duration-300 hover:shadow-elegant-lg hover:-translate-y-1;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Service Cards - tradiční styl */
+.service-card::before {
+  content: "";
+  @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-strawstav-red to-strawstav-red-light;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
 .service-card-traditional {
   @apply transition-all duration-200;
   min-height: 280px;
@@ -108,11 +146,25 @@
 }
 
 .service-icon {
-  @apply w-16 h-16 mx-auto mb-4 text-strawstav-red;
+  @apply w-16 h-16 mx-auto mb-4 text-strawstav-red transition-transform duration-300;
+}
+
+.service-card:hover .service-icon {
+  @apply scale-110;
 }
 
 .service-icon-container {
   @apply relative z-10;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Back to top button styles */
@@ -127,37 +179,48 @@
 }
 
 .back-to-top-button:hover {
-  @apply bg-red-700;
+  @apply bg-strawstav-red-dark scale-110;
 }
 
+/* Parallax background */
 .parallax-bg {
   @apply absolute w-full h-full top-0 left-0 -z-10;
 }
 
+/* Section title with modern styling */
 .section-title {
   @apply text-3xl md:text-4xl font-bold mb-8 text-center relative;
+  position: relative;
+  padding-bottom: 1.5rem;
 }
 
 .section-title-border {
   @apply border-b-4 border-strawstav-red px-2 pb-2;
 }
 
-/* Zachováváme původní stylování pro zpětnou kompatibilitu */
 .section-title::after {
   content: "";
-  @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-strawstav-red;
+  @apply absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-strawstav-red to-strawstav-red-light rounded-full;
 }
 
+/* Modern form inputs */
 .contact-input {
-  @apply w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-strawstav-red transition-all duration-300;
+  @apply w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-strawstav-red focus:border-transparent transition-all duration-300 bg-gray-50 hover:bg-white;
 }
 
+.contact-input::placeholder {
+  @apply text-gray-400;
+}
+
+/* Modern buttons */
 .contact-button {
-  @apply w-full py-3 px-6 bg-strawstav-red text-white font-medium rounded-md hover:bg-red-700 transition-all duration-300;
+  @apply w-full py-3 px-6 bg-gradient-to-r from-strawstav-red to-strawstav-red-dark text-white font-medium rounded-lg hover:shadow-elegant transition-all duration-300 hover:scale-105 active:scale-95;
 }
 
+/* Gallery items */
 .gallery-item {
-  @apply relative overflow-hidden rounded-lg cursor-pointer;
+  @apply relative overflow-hidden rounded-xl cursor-pointer;
+  aspect-ratio: 1;
 }
 
 .gallery-overlay {
@@ -176,6 +239,7 @@
   @apply translate-y-0;
 }
 
+/* Header styling */
 .header-logo {
   @apply flex items-center justify-center transition-all duration-300;
   max-height: 80px;
@@ -195,19 +259,21 @@
   width: auto;
 }
 
+/* Navigation links with underline animation */
 .nav-link {
-  @apply relative text-black hover:text-strawstav-red transition-colors duration-300;
+  @apply relative text-black hover:text-strawstav-red transition-colors duration-300 font-medium;
 }
 
 .nav-link::after {
   content: "";
-  @apply absolute left-0 bottom-0 w-0 h-0.5 bg-strawstav-red transition-all duration-300;
+  @apply absolute left-0 bottom-0 w-0 h-0.5 bg-gradient-to-r from-strawstav-red to-strawstav-red-light transition-all duration-300;
 }
 
 .nav-link:hover::after {
   @apply w-full;
 }
 
+/* Mobile menu styling */
 .mobile-menu {
   @apply fixed top-0 right-0 h-full w-0 bg-white z-50 overflow-hidden transition-all duration-300 shadow-2xl;
 }
@@ -217,28 +283,27 @@
 }
 
 .mobile-nav-link {
-  @apply block py-4 px-6 text-lg border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200;
+  @apply block py-4 px-6 text-lg border-b border-gray-100 hover:bg-gradient-to-r hover:from-primary-50 hover:to-transparent transition-colors duration-200 font-medium;
 }
 
-/* Header styles */
+/* Header backdrop effects */
 header {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
-/* Header logo container */
 .header-logo {
   position: relative;
   z-index: 101;
 }
 
-/* Ensure content doesn't overlap with fixed header */
+/* Main content positioning */
 main {
   position: relative;
   z-index: 1;
 }
 
-/* Timeline utility classes */
+/* Utility classes */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -254,7 +319,7 @@ main {
   }
 }
 
-/* Timeline animations */
+/* Timeline card animations */
 .timeline-card {
   transition: all 0.3s ease;
 }
@@ -276,7 +341,7 @@ main {
   backface-visibility: hidden;
 }
 
-/* Smooth transitions without scroll dependency */
+/* Smooth transitions */
 @media (prefers-reduced-motion: no-preference) {
   .timeline-animate-in {
     animation: slideInUp 0.6s ease-out forwards;
@@ -294,9 +359,10 @@ main {
   }
 }
 
-/* Circular Stats Styles */
+/* Animated stats styles */
 .stat-card {
-  @apply bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300;
+  @apply bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-elegant hover:shadow-elegant-lg transition-all duration-300;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .stat-circle-wrapper {
@@ -320,7 +386,7 @@ main {
   background: linear-gradient(135deg, #333 0%, #a0001c 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+  background-clip: text;
 }
 
 .stat-icon {
@@ -331,6 +397,7 @@ main {
   @apply border-b-4 border-strawstav-red px-2 pb-2;
 }
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .stat-value {
     @apply text-4xl;
@@ -338,5 +405,9 @@ main {
   
   .stat-icon {
     @apply text-xl top-4;
+  }
+
+  .section-title {
+    @apply text-2xl md:text-3xl;
   }
 }

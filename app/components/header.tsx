@@ -41,12 +41,12 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 w-full z-[100] transition-all duration-300 ${
         isScrolled 
-          ? "bg-white/95 backdrop-blur-sm shadow-lg py-2" 
-          : "bg-white/80 backdrop-blur-sm py-3"
+          ? "bg-white/98 backdrop-blur-xl shadow-elegant py-2 border-b border-gray-100" 
+          : "bg-white/95 backdrop-blur-xl py-3 border-b border-transparent"
       }`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center min-h-[70px] max-h-[70px] overflow-hidden">
-        <Link href="/" className="header-logo flex items-center justify-center">
+        <Link href="/" className="header-logo flex items-center justify-center hover:scale-105 transition-transform duration-300">
           <Logo 
             width={isScrolled ? 120 : 140} 
             height={isScrolled ? 48 : 56}
@@ -55,25 +55,24 @@ export default function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-8">
-          <Link href="#sluzby" className="nav-item nav-link">
+        <nav className="hidden md:flex space-x-2">
+          <Link href="#sluzby" className="nav-item nav-link px-4 py-2 rounded-lg hover:bg-gray-100/50 transition-colors duration-300">
             Služby
           </Link>
-          <Link href="#galerie" className="nav-item nav-link">
+          <Link href="#galerie" className="nav-item nav-link px-4 py-2 rounded-lg hover:bg-gray-100/50 transition-colors duration-300">
             Galerie
           </Link>
-          <Link href="#reference" className="nav-item nav-link">
+          <Link href="#reference" className="nav-item nav-link px-4 py-2 rounded-lg hover:bg-gray-100/50 transition-colors duration-300">
             Reference
           </Link>
-          <Link href="#kontakt" className="nav-item nav-link">
+          <Link href="#kontakt" className="nav-item nav-link px-4 py-2 rounded-lg hover:bg-gray-100/50 transition-colors duration-300">
             Kontakt
           </Link>
-          
         </nav>
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-black focus:outline-none"
+          className="md:hidden text-black focus:outline-none p-2 hover:bg-gray-100 rounded-lg transition-colors duration-300"
           onClick={toggleMenu}
           aria-label={isMenuOpen ? "Zavřít menu" : "Otevřít menu"}
         >
@@ -96,12 +95,11 @@ export default function Header() {
           <Link href="#kontakt" className="mobile-nav-link" onClick={() => setIsMenuOpen(false)}>
             Kontakt
           </Link>
-          
         </div>
       </div>
 
       {/* Overlay for mobile menu */}
-      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)} />}
+      {isMenuOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)} />}
     </header>
   )
 }

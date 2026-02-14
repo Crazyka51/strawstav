@@ -228,52 +228,67 @@ export default function Gallery() {
   }, [])
 
   return (
-    <section id="galerie" ref={sectionRef} className="py-20">
-      <div className="container mx-auto px-4">
+    <section id="galerie" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-1/4 left-0 w-96 h-96 bg-strawstav-red opacity-5 rounded-full -translate-x-1/2 blur-3xl"></div>
+      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-strawstav-red opacity-5 rounded-full translate-x-1/2 blur-3xl"></div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <h2 ref={titleRef} className="section-title">
           <span className="section-title-border">
             Naše projekty
           </span>
         </h2>
 
-        <div ref={galleryRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-12">
+        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-16 text-lg">
+          Prohlédněte si naše realizované projekty a překvapte se kvalitou naší práce.
+        </p>
+
+        <div ref={galleryRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
           {projects.slice(0, visibleProjects).map((project) => (
-            <div key={project.id} className="gallery-item relative group">
+            <div key={project.id} className="gallery-item relative group overflow-hidden rounded-2xl shadow-elegant hover:shadow-elegant-lg transition-all duration-300">
               <Image
                 src={project.image || "/construction-team.jpg"}
                 alt={project.title}
                 width={800}
                 height={600}
-                className="w-full h-64 object-cover rounded-lg shadow-md"
+                className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500"
                 priority={project.id <= 8}
               />
-              <div className="gallery-overlay rounded-lg">
-                <div className="text-center p-4">
-                  <h3 className="gallery-title">{project.title}</h3>
-                  <p className="text-white mt-2 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                    {project.description}
-                  </p>
-                </div>
+              
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              
+              {/* Content */}
+              <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
+                <h3 className="gallery-title font-bold text-lg">{project.title}</h3>
+                <p className="text-gray-100 text-sm mt-2 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 line-clamp-2">
+                  {project.description}
+                </p>
               </div>
+
+              {/* Shine effect */}
+              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
             </div>
           ))}
         </div>
         
         {visibleProjects < projects.length && (
-          <div className="flex justify-center mt-10">
+          <div className="flex justify-center mt-16">
             <button
               onClick={loadMoreProjects}
               disabled={isLoading}
-              className="px-6 py-3 bg-strawstav-red text-white font-medium rounded-lg hover:bg-red-700 transition-colors duration-300 shadow-md flex items-center space-x-2 disabled:opacity-70"
+              className="px-8 py-4 bg-gradient-to-r from-strawstav-red to-strawstav-red-dark text-white font-semibold rounded-xl hover:shadow-elegant transition-all duration-300 flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
-                  <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
-                  <span>Načítání...</span>
+                  <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                  <span>Načítání projektů...</span>
                 </>
               ) : (
                 <>
-                  <span>Zobrazit další projekty</span>
+                  <span>Zobrazit více projektů</span>
+                  <span>→</span>
                 </>
               )}
             </button>

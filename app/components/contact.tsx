@@ -115,18 +115,27 @@ export default function Contact() {
   }
 
   return (
-    <section id="kontakt" ref={sectionRef} className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section id="kontakt" ref={sectionRef} className="py-20 bg-gradient-to-b from-white via-strawstav-gray-light to-white relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-1/3 right-0 w-96 h-96 bg-strawstav-red opacity-5 rounded-full translate-x-1/2 blur-3xl"></div>
+      <div className="absolute bottom-1/3 left-0 w-96 h-96 bg-strawstav-red opacity-5 rounded-full -translate-x-1/2 blur-3xl"></div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <h2 ref={titleRef} className="section-title">
           <span className="section-title-border">
             Kontaktujte nás
           </span>
         </h2>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-12">
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-16 text-lg">
+          Máte zájem o naše služby? Neváhejte nás kontaktovat. Rádi bychom vám pomohli s vaším projektem.
+        </p>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-12">
+          {/* Contact Form */}
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-2xl shadow-elegant">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
                 Jméno a příjmení
               </label>
               <input
@@ -137,13 +146,13 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 className="contact-input"
-                placeholder="Vaše jméno"
+                placeholder="Jakub Novák"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                E-mail
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+                E-mailová adresa
               </label>
               <input
                 type="email"
@@ -153,12 +162,12 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 className="contact-input"
-                placeholder="vas@email.cz"
+                placeholder="jakub@example.cz"
               />
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2">
                 Telefon
               </label>
               <input
@@ -168,13 +177,13 @@ export default function Contact() {
                 value={formData.phone}
                 onChange={handleChange}
                 className="contact-input"
-                placeholder="+420 123 456 789"
+                placeholder="+420 602 123 456"
               />
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Zpráva
+              <label htmlFor="message" className="block text-sm font-semibold text-gray-900 mb-2">
+                Vaše zpráva
               </label>
               <textarea
                 id="message"
@@ -183,61 +192,93 @@ export default function Contact() {
                 onChange={handleChange}
                 required
                 rows={5}
-                className="contact-input"
-                placeholder="Vaše zpráva..."
+                className="contact-input resize-none"
+                placeholder="Popište vaši poptávku..."
               ></textarea>
             </div>
 
-            <button type="submit" disabled={isSubmitting} className="contact-button flex items-center justify-center">
-              {isSubmitting ? "Odesílání..." : "Odeslat zprávu"}
+            <button 
+              type="submit" 
+              disabled={isSubmitting} 
+              className="contact-button flex items-center justify-center font-semibold disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                  Odesílání...
+                </>
+              ) : (
+                "Odeslat zprávu"
+              )}
             </button>
 
-            {submitMessage && <div className="bg-green-50 text-green-800 p-4 rounded-md">{submitMessage}</div>}
+            {submitMessage && (
+              <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 text-green-800 rounded-xl border-2 border-green-200 font-medium">
+                ✓ {submitMessage}
+              </div>
+            )}
           </form>
 
+          {/* Contact Information */}
           <div ref={infoRef} className="space-y-8">
-            <div className="flex items-start">
-              <div className="contact-icon bg-strawstav-red bg-opacity-10 p-3 rounded-full mr-4">
-                <Phone className="text-strawstav-red" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium mb-1">Telefon</h3>
-                <p className="text-gray-600">+420 602 766 755</p>
-              </div>
-            </div>
-
-            <div className="flex items-start">
-              <div className="contact-icon bg-strawstav-red bg-opacity-10 p-3 rounded-full mr-4">
-                <Mail className="text-strawstav-red" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium mb-1">E-mail</h3>
-                <p className="text-gray-600">info@strawstav.cz</p>
+            {/* Phone */}
+            <div className="bg-white p-6 rounded-2xl shadow-elegant hover:shadow-elegant-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="contact-icon bg-gradient-to-br from-strawstav-red to-strawstav-red-dark p-4 rounded-xl text-white flex-shrink-0">
+                  <Phone size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Telefon</h3>
+                  <p className="text-gray-600 text-lg">
+                    <a href="tel:+420602766755" className="hover:text-strawstav-red transition-colors duration-300 font-semibold">
+                      +420 602 766 755
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-start">
-              <div className="contact-icon bg-strawstav-red bg-opacity-10 p-3 rounded-full mr-4">
-                <MapPin className="text-strawstav-red" />
-              </div>
-              <div>
-                <h3 className="text-lg font-medium mb-1">Adresa</h3>
-                <p className="text-gray-600">
-                  STRAWSTAV S.R.O.
-                  <br />
-                  Prvního pluku 320/17
-                  <br />
-                  Karlín, 186 00, Praha 8
-                </p>
+            {/* Email */}
+            <div className="bg-white p-6 rounded-2xl shadow-elegant hover:shadow-elegant-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="contact-icon bg-gradient-to-br from-strawstav-red to-strawstav-red-dark p-4 rounded-xl text-white flex-shrink-0">
+                  <Mail size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">E-mail</h3>
+                  <p className="text-gray-600 text-lg">
+                    <a href="mailto:info@strawstav.cz" className="hover:text-strawstav-red transition-colors duration-300 font-semibold">
+                      info@strawstav.cz
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8 h-64 rounded-lg overflow-hidden shadow-md border border-gray-200">
+            {/* Address */}
+            <div className="bg-white p-6 rounded-2xl shadow-elegant hover:shadow-elegant-lg transition-all duration-300 hover:-translate-y-1">
+              <div className="flex items-start gap-4">
+                <div className="contact-icon bg-gradient-to-br from-strawstav-red to-strawstav-red-dark p-4 rounded-xl text-white flex-shrink-0">
+                  <MapPin size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Adresa</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    STRAWSTAV S.R.O.<br />
+                    Prvního pluku 320/17<br />
+                    Karlín, 186 00, Praha 8
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Map */}
+            <div className="mt-8 h-80 rounded-2xl overflow-hidden shadow-elegant border-2 border-gray-100 hover:shadow-elegant-lg transition-all duration-300">
               <a 
                 href="https://www.openstreetmap.org/?mlat=50.09121814453243&mlon=14.441955517554467&zoom=17" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="relative block w-full h-full"
+                className="relative block w-full h-full group"
                 title="Zobrazit sídlo firmy na OpenStreetMap"
               >
                 <iframe 
@@ -250,8 +291,10 @@ export default function Contact() {
                   title="Mapa sídla firmy STRAWSTAV S.R.O."
                   aria-label="Interaktivní mapa sídla firmy STRAWSTAV S.R.O. na OpenStreetMap"
                 ></iframe>
-                <div className="absolute top-0 left-0 right-0 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-20 text-white p-2 text-center">
-                  Klikněte pro zobrazení na OpenStreetMap
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6 pointer-events-none">
+                  <span className="text-white font-semibold bg-black/50 px-4 py-2 rounded-lg backdrop-blur-sm">
+                    Klikněte pro úplnou mapu
+                  </span>
                 </div>
               </a>
             </div>
