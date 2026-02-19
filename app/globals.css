@@ -246,12 +246,6 @@
   overflow: visible;
 }
 
-.header-logo {
-  @apply flex items-center justify-center transition-all duration-300;
-  max-height: 60px;
-  overflow: hidden;
-}
-
 .header-logo img {
   @apply transition-all duration-300;
   object-fit: contain;
