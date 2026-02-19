@@ -2,10 +2,10 @@ import { type NextRequest, NextResponse } from "next/server"
 import { createServerSupabaseClient } from "@/lib/server"
 
 // POST /api/pages/[slug]/versions/[version]/restore - Obnovení konkrétní verze stránky
-export async function POST(request: NextRequest, { params }: { params: { slug: string; version: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string; version: string }> }) {
   try {
     const supabase = createServerSupabaseClient()
-    const { slug, version } = params
+    const { slug, version } = await params
     const versionNumber = Number.parseInt(version, 10)
 
     if (isNaN(versionNumber)) {

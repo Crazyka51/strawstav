@@ -1,11 +1,12 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { gsap } from "gsap"
 import Image from "next/image"
 import { Hourglass } from "lucide-react"
 
 export default function Preloader() {
+  const [isMounted, setIsMounted] = useState(false)
   const preloaderRef = useRef<HTMLDivElement>(null)
   const loaderIconRef = useRef<HTMLDivElement>(null)
   const logoContainerRef = useRef<HTMLDivElement>(null)
@@ -14,8 +15,16 @@ export default function Preloader() {
   const obrysdomuRef = useRef<HTMLImageElement>(null)
   const textRef = useRef<HTMLImageElement>(null)
   const caraRef = useRef<HTMLImageElement>(null)
+  const timelineRef = useRef<gsap.core.Timeline | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isMounted) return
+
     // Zajistíme, že logo container je na začátku skrytý
     gsap.set(logoContainerRef.current, { opacity: 0 })
 
@@ -57,7 +66,7 @@ export default function Preloader() {
 
                 // Vyšleme vlastní událost, že preloader byl dokončen
                 // DŮLEŽITÉ: Vyšleme událost až po úplném skrytí preloaderu
-                setTimeout(() => {
+                timeoutRef.current = setTimeout(() => {
                   document.dispatchEvent(new CustomEvent("preloaderComplete"))
                 }, 100)
               }
@@ -65,6 +74,9 @@ export default function Preloader() {
           })
         },
       })
+      
+      // Store timeline for cleanup
+      timelineRef.current = tl
 
       // Set initial states
       gsap.set([strechaRef.current, podkroviRef.current, obrysdomuRef.current, textRef.current], {
@@ -122,9 +134,34 @@ export default function Preloader() {
     }
 
     return () => {
-      gsap.killTweensOf(loaderIconRef.current)
+      // Kill all tweens for individual refs
+      if (loaderIconRef.current) gsap.killTweensOf(loaderIconRef.current)
+      if (logoContainerRef.current) gsap.killTweensOf(logoContainerRef.current)
+      if (strechaRef.current) gsap.killTweensOf(strechaRef.current)
+      if (podkroviRef.current) gsap.killTweensOf(podkroviRef.current)
+      if (obrysdomuRef.current) gsap.killTweensOf(obrysdomuRef.current)
+      if (textRef.current) gsap.killTweensOf(textRef.current)
+      if (caraRef.current) gsap.killTweensOf(caraRef.current)
+      if (preloaderRef.current) gsap.killTweensOf(preloaderRef.current)
+      
+      // Kill the timeline
+      if (timelineRef.current) {
+        timelineRef.current.kill()
+        timelineRef.current = null
+      }
+      
+      // Clear any pending timeouts
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
     }
-  }, [])
+  }, [isMounted])
+
+  // Render nothing on server to prevent hydration issues
+  if (!isMounted) {
+    return null
+  }
 
   return (
     <div ref={preloaderRef} className="preloader">

@@ -2,9 +2,9 @@ import { NextResponse } from "next/server"
 import { createServerSupabaseClient } from "@/lib/server"
 
 // GET /api/pages/[slug]/versions - Získání všech verzí stránky
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = params
+    const { slug } = await params
     const supabase = createServerSupabaseClient()
 
     // 1. Získání informací o stránce

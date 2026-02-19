@@ -45,11 +45,11 @@ export default function Header() {
           : "bg-white/95 backdrop-blur-xl py-3 border-b border-transparent"
       }`}
     >
-      <div className="container mx-auto px-4 flex justify-between items-center min-h-[70px] max-h-[70px] overflow-hidden">
+      <div className="container mx-auto px-4 flex justify-between items-center min-h-[90px] overflow-hidden">
         <Link href="/" className="header-logo flex items-center justify-center hover:scale-105 transition-transform duration-300">
           <Logo 
-            width={isScrolled ? 120 : 140} 
-            height={isScrolled ? 48 : 56}
+            width={isScrolled ? 130 : 150} 
+            height={isScrolled ? 52 : 64}
             className={`transition-all duration-300`}
           />
         </Link>

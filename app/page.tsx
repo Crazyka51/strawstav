@@ -8,7 +8,6 @@ import Hero from "@/app/components/hero"
 import Services from "@/app/components/services"
 import Gallery from "@/app/components/gallery"
 import Contact from "@/app/components/contact"
-import TimelineProjects from "@/app/components/timeline-projects"
 import BeforeAfterGallery from "@/app/components/before-after-gallery"
 import BlogSection from "@/app/components/blog-section"
 import TestimonialsCarousel from "@/app/components/testimonials-carousel"
@@ -261,7 +260,6 @@ export default function Home() {
         steps={processSteps}
         description="Podívejte se, jak probíhá spolupráce s námi od prvního kontaktu až po předání hotového díla."
       />
-      <TimelineProjects projects={projectsData} />
       <BeforeAfterGallery projects={beforeAfterProjects} />
       <Gallery />
       <TestimonialsCarousel testimonials={testimonials} />

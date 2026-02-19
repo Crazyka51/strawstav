@@ -4,7 +4,7 @@ import { Poppins } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/app/components/theme-provider"
 import MessengerChat from "@/app/components/messenger-chat"
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 // Optimalizované načítání fontu
 const poppins = Poppins({
   subsets: ["latin"],
@@ -55,6 +55,7 @@ export default function RootLayout({
           {children}
         </ThemeProvider>
         <MessengerChat />
+        <Analytics />
       </body>
     </html>
   )

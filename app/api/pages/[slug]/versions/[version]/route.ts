@@ -5,16 +5,9 @@ import type { Database } from "@/lib/types"
 type Page = Database['public']['Tables']['pages']['Row']
 type PageVersion = Database['public']['Tables']['page_versions']['Row']
 
-interface RouteParams {
-  params: {
-    slug: string
-    version: string
-  }
-}
-
-export async function GET(request: Request, { params }: RouteParams) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string; version: string }> }) {
   try {
-    const { slug, version } = params
+    const { slug, version } = await params
     const versionNumber = Number.parseInt(version, 10)
 
     if (isNaN(versionNumber)) {
@@ -70,10 +63,10 @@ export async function GET(request: Request, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string; version: string }> }) {
   try {
     const supabase = createServerSupabaseClient()
-    const { slug, version } = params
+    const { slug, version } = await params
     const versionNumber = Number.parseInt(version, 10)
 
     if (isNaN(versionNumber)) {

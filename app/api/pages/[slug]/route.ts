@@ -5,16 +5,10 @@ import type { Database } from "@/lib/types"
 type Page = Database['public']['Tables']['pages']['Row']
 type PageVersion = Database['public']['Tables']['page_versions']['Row']
 
-interface RouteParams {
-  params: {
-    slug: string
-  }
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const supabase = createServerSupabaseClient()
-    const { slug } = params
+    const { slug } = await params
 
     // Získání stránky podle slugu
     const { data: pageDataResult, error: pageError } = await supabase.from("pages").select("*").eq("slug", slug).single()
@@ -58,10 +52,10 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: RouteParams) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const supabase = createServerSupabaseClient()
-    const { slug } = params
+    const { slug } = await params
     const body = await request.json()
     const { name, description, config, createNewVersion = false } = body
 
@@ -164,10 +158,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteParams) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const supabase = createServerSupabaseClient()
-    const { slug } = params
+    const { slug } = await params
 
     // Smazání stránky (kaskádově smaže i všechny verze díky ON DELETE CASCADE)
     const { error } = await supabase.from("pages").delete().eq("slug", slug)

@@ -125,7 +125,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className={`relative min-h-screen flex items-center justify-center pt-20 overflow-hidden transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`relative min-h-[600px] md:min-h-[700px] flex items-center justify-center pt-20 overflow-hidden transition-opacity duration-500 ${isVisible ? "opacity-100" : "opacity-0"}`}
       style={{ background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #f5f5f5 100%)" }}
     >
       {/* Animated background shapes */}
